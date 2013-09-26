@@ -1,0 +1,3 @@
+f_bgroupe_accueil:
+    pattern:  /
+    defaults: { _controller: FBgroupeBundle:Accueil:index }

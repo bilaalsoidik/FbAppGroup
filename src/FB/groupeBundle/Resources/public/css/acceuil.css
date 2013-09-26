@@ -1,0 +1,164 @@
+/* 
+    Document   : acceuil
+    Created on : 19 sept. 2013, 15:03:13
+    Author     : Administrateur
+    Description:
+        Purpose of the stylesheet follows.
+*/
+*{
+    font-family: Tahoma,sans-serif;
+    font-size: 16px;
+    
+    
+    
+}
+html, body{
+        margin: 0;
+	padding: 0;
+	height: 100%;
+}
+root { 
+    display: block;
+}
+#container{
+   background-color: whitesmoke;
+   position:relative;
+   margin:auto;
+   width: 810px;
+   min-height: 100%;
+   border-radius: 20px 20px 0px 0px;
+   margin-top: 7px;
+   
+}
+#baniere{
+    border-radius: 20px 20px 20px 20px;
+    position: relative;
+    margin: 2px 2px -2px 2px;
+    height: 95%;
+    border-style: solid;
+    border-color: white;
+    border-width: 3px;
+    width: 800px;
+}
+#menu{
+    display : bloc;
+    position:relative;
+    height: 58px;
+    border-style: solid;
+    border-width: 2px;
+    border-color:white;
+    border-radius: 20px 20px 20px 20px;
+    
+    margin: 2px 2px 0px 2px;
+    
+}
+#menu div{
+    border-radius: 20px 20px 20px 20px;
+    display : bloc;
+    position:relative;
+    height: 52px;
+    border-style: solid;
+    border-width: 3px;
+    border-color:#3b5999;
+    padding-left:  10px;
+    padding-right:   10px;
+    margin-bottom:  4px;
+   text-align: center;
+   vertical-align: middle;
+   line-height: 50px;
+   padding-bottom: 0px;
+   padding-top: 0px;
+}
+#acc{
+    float: left;
+    /*background-color: cyan;*/ 
+    left: 5px;
+}
+#menu div span.menu{
+    width: 140px;
+    height: 42px;
+    top: 5px;
+     position: relative;
+     line-height: 42px
+}
+#conn{
+    
+    float: right;
+    /*background-color: cyan;*/
+    right: 5px;
+    
+}
+#trsh1{
+    position: relative;
+    float: left;
+    border-radius: 16px 0px 0px 16px;
+    margin-left: -5px;
+    width: 30px;
+    background-color: #00F;
+    height: 42px;
+    top: 5px;
+}
+#trsh2{
+    position: relative;
+    float: right;
+    border-radius: 0px 16px 16px 0px;
+    margin-right: -5px;
+    width: 37px;
+    height: 42px;
+    top: 5px;
+     background-color: #00F;
+}
+#menu div a{
+    text-decoration: none;
+    
+}
+#menu div span{
+font-size: 18px;
+font-weight: bold;
+
+
+background: #6db3f2; 
+color: white;
+/* Old browsers */
+background: linear-gradient(to bottom, #6db3f2 0%,#54a3ee 49%,#3690f0 54%,#1e69de 100%); /* W3C */
+background: -moz-linear-gradient(top, #6db3f2 0%, #54a3ee 47%, #3690f0 56%, #1e69de 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#6db3f2), color-stop(47%,#54a3ee), color-stop(56%,#3690f0), color-stop(100%,#1e69de)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top, #6db3f2 0%,#54a3ee 47%,#3690f0 56%,#1e69de 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #6db3f2 0%,#54a3ee 47%,#3690f0 56%,#1e69de 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, #6db3f2 0%,#54a3ee 47%,#3690f0 56%,#1e69de 100%); /* IE10+ */
+
+}
+#menu div span.menu:hover{
+background-color: lightcyan;  
+background: #e4f5fc; /* Old browsers */
+background: linear-gradient(to bottom,  #e4f5fc 0%,#bfe8f9 47%,#9fd8ef 56%,#2ab0ed 100%); /* W3C */
+background: -moz-linear-gradient(top,  #e4f5fc 0%, #bfe8f9 47%, #9fd8ef 56%, #2ab0ed 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e4f5fc), color-stop(49%,#bfe8f9), color-stop(54%,#9fd8ef), color-stop(100%,#2ab0ed)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #e4f5fc 0%,#bfe8f9 47%,#9fd8ef 56%,#2ab0ed 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #e4f5fc 0%,#bfe8f9 49%,#9fd8ef 54%,#2ab0ed 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #e4f5fc 0%,#bfe8f9 49%,#9fd8ef 54%,#2ab0ed 100%); /* IE10+ */
+border: #1e69de  solid 1px;
+height: 40px;
+width: 138px;
+}
+#contenu{
+  
+    position:relative;
+    border-style: solid solid none solid ;
+    border-width: 2px;
+    border-color:white;
+    border-radius: 20px 20px 0px 0px;
+     min-height:  600px;
+     margin: 2px;
+}
+#intercontenu{
+    border-radius: 20px 20px 0px 0px;
+    position:relative;
+    border-style: solid solid none solid  ;
+    border-width: 3px;
+    border-color:#3b5999;
+    padding-left:  20px;
+    padding-right:   17px;
+    min-height:  600px;
+    
+}

@@ -1,0 +1,10 @@
+f_bgroupe:
+    resource: "@FBgroupeBundle/Resources/config/routing.yml"
+    prefix:   /
+
+_security_check:
+  pattern:  /login_check
+  defaults: { _controller: FBgroupeBundle:Acceil:login_check }
+_security_logout:
+  pattern:  /logout
+  defaults: { _controller: FBgroupeBundle:Accueil:logout }

@@ -1,0 +1,7 @@
+parameters:
+#    f_bgroupe.example.class: FB\groupeBundle\Example
+
+services:
+#    f_bgroupe.example:
+#        class: %f_bgroupe.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

@@ -24,7 +24,7 @@ root {
    background-color: whitesmoke;
    position:relative;
    margin:auto;
-   width: 810px;
+   width: 816px;
    min-height: 100%;
    border-radius: 20px 20px 0px 0px;
    margin-top: 7px;
@@ -38,7 +38,7 @@ root {
     border-style: solid;
     border-color: white;
     border-width: 3px;
-    width: 800px;
+    width: 806px;
 }
 #menu{
     display : bloc;
@@ -150,6 +150,7 @@ width: 138px;
     border-radius: 20px 20px 0px 0px;
      min-height:  600px;
      margin: 2px;
+     
 }
 #intercontenu{
     border-radius: 20px 20px 0px 0px;
@@ -160,5 +161,6 @@ width: 138px;
     padding-left:  20px;
     padding-right:   17px;
     min-height:  600px;
+    text-align: justify;
     
 }

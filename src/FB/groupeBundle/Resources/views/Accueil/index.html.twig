@@ -1,11 +1,13 @@
 {% extends "FBgroupeBundle::layout.html.twig" %}
 {% block title "Accueil" %}
 {%block connect  %}
-<a href="{{ path('f_bgroupe_accueil') }}"><span id="conn" class="menu"> Se connecter </span></a>
+<a href="{{ path('_security_check') }}"> <span id="conn" class="menu"> Se connecter </span></a> 
 {% endblock %}
 {% block content %}
-Dans cette application vous allez pouvoir importer pour un groupe facebook: les données d'indentification, les membres avec leurs rôles, les postes publiés, les commentaires et les personnes qui ont aimé chaque poste.
-<br>Veuillez vous connectez et donner les permissions à l'application, pour pouvoir démarrer!<br>
+Dans cette application vous allez pouvoir importer pour un groupe facebook: les données d'indentification, les membres avec leurs rôles, les postes publiés, les commentaires et les personnes qui ont aimé chaque poste. Veuillez vous connectez avec facebook et donner les permissions à l'application, pour pouvoir commencer<br>
 <center><br>{{ facebook_login_button({'autologoutlink': true, 'label':'Se connecter', width:130,'size':'xlarge'}) }}
-<br></center>
+<br>
+<br>
+<br>
+L'application se base sur votre session facebook, et enregistre les données sur les cookies</center>
 {% endblock %} 

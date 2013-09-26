@@ -11,10 +11,10 @@ class AccueilController extends Controller
     {
         return $this->render('FBgroupeBundle:Accueil:index.html.twig');
     }
-    public function loginAction(){
+    public function login_reussiAction(){
         
     }
-    public function  logutAction(){
+    public function  deconnecteAction(){
         
    }
 }

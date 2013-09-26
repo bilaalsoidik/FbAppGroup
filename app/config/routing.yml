@@ -4,8 +4,8 @@ f_bgroupe:
 
 _security_check:
   pattern:  /login_check
-  defaults: { _controller: FBgroupeBundle:Accueil:login }
+  defaults: { _controller: FBgroupeBundle:Accueil:login_reussi }
 
 _security_logout:
   pattern:  /logout
-  defaults: { _controller: FBgroupeBundle:Accueil:logout }
+  defaults: { _controller: FBgroupeBundle:Accueil:deconnecte}

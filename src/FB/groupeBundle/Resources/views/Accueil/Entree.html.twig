@@ -1,8 +1,0 @@
-{% extends "FBgroupeBundle::layout.html.twig" %}
-{% block title "Accueil" %}
-{%block connect  %}
-<a href="{{utilisateur.link}}"> <span id="conn" class="menuitem"> {{utilisateur.name}}</span></a>  <img id="avatar" src="https://graph.facebook.com/{{utilisateur.id}}/picture" alt="photo de profile"/> </span> 
-{% endblock %}
-{% block content %}
-Vous êtes bien connecter alors à present choisissez un groupe dont vous voulez importer les données
-{% endblock %} 

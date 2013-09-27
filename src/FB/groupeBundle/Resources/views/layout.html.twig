@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:fb="http://www.facebook.com/2008/fbml">
  <head>
-<meta http-equiv="Content-Type" content="text/html;
-charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>App Groupe :: {% block title %}{% endblock %}</title>
 {% block stylesheets %}
 <link rel="stylesheet" href="{{ asset('bundles/FBgroupe/css/acceuil.css') }}" type="text/css" media="all" />
+<link href="{{asset('bundles/FBgroupe/css/Theme/jquery-ui-1.10.3.custom.css') }}" rel="stylesheet">
 {% endblock %}
-<title>App Groupe :: {% block title %}{% endblock %}</title>
+	<script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/jquery-1.9.1.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/jquery-ui-1.10.3.custom.js') }}"></script>
+{% block scripts %} 
+
+{% endblock %}
   </head>
 <body>
     <script>
@@ -20,7 +25,7 @@ charset=utf-8" />
                 if (response.session || response.authResponse) {
                     setTimeout(goLogIn, 500);
                 } else {
-                    window.location.href = "{{ path('_security_logout') }}";
+                    window.location.href = "{{ path('f_bgroupe_accueil') }}";
                 }
             });
         }
@@ -36,7 +41,7 @@ charset=utf-8" />
 <div id="menu">
 <div class="internal">
     <span id="trsh1"> </span>   <a href="{{ path('f_bgroupe_accueil') }}" title="Retour à l'accueil" >
-        <span id="acc" class="menuitem" >Accueil</span> </a> <span id="trsh2"> </span>  <div id="conn" class="menu"> {{ facebook_login_button({'autologoutlink': true, 'label':'Se connecter', width:130,'size':'xlarge'}) }} </div>
+        <span id="acc" class="menuitem" > Accueil </span> </a> <span id="trsh2"> </span>  <div id="conn" class="menu"> {{ facebook_login_button({'autologoutlink': true, 'label':'Se connecter', width:130,'size':'xlarge'}) }} </div>
 {%block connect %} {%endblock%}
 </div>
 </div>

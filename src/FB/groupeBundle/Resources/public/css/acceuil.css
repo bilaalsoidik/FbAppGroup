@@ -6,7 +6,7 @@
         Purpose of the stylesheet follows.
 */
 *{
-    font-family: 'Helvetica Neue', Helvetica, Arial, 'lucida grande',tahoma,verdana,arial,sans-serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, 'lucida grande',Tahoma,verdana,arial,sans-serif;
     font-size: 14px;
     
     
@@ -140,7 +140,7 @@ root {
     right: 6px;
 }
 #menu div span{
-font-size: x-large;
+font-size: 21px;
 font-weight: bolder;
 
 

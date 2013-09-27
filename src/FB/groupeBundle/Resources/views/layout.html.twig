@@ -34,9 +34,10 @@ charset=utf-8" />
       <a href="{{ path('f_bgroupe_accueil') }}"  >
 <img id="baniere" src="{{ asset('bundles/FBgroupe/images/FBgroup.png') }}"/></a>  
 <div id="menu">
-<div>
+<div class="internal">
     <span id="trsh1"> </span>   <a href="{{ path('f_bgroupe_accueil') }}" title="Retour à l'accueil" >
-        <span id="acc" class="menu">Accueil</span> </a> <span id="trsh2"> </span> {%block connect %} {%endblock%}
+        <span id="acc" class="menuitem" >Accueil</span> </a> <span id="trsh2"> </span>  <div id="conn" class="menu"> {{ facebook_login_button({'autologoutlink': true, 'label':'Se connecter', width:130,'size':'xlarge'}) }} </div>
+{%block connect %} {%endblock%}
 </div>
 </div>
 </header>

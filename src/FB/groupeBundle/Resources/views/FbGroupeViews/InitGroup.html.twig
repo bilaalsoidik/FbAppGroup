@@ -1,0 +1,65 @@
+{% extends "FBgroupeBundle::layout.html.twig" %}
+{% block title "Initialisation de Groupe" %}
+
+{%block connect  %}
+<a href="{{utilisateur.link}}"> <span id="conn" class="menuitem"> {{utilisateur.name}}</span></a>  <img id="avatar" src="https://graph.facebook.com/{{utilisateur.id}}/picture" alt="photo de profile"/> </span> 
+{% endblock %}
+{% block content %}
+Vous êtes bien connecter alors à present choisissez un groupe dont vous voulez importer les données, en saisissant un nom de groupe
+<br> <span class="labele"> Rechercher un groupe &nbsp;</span> <input id="rechgroup" type="text"   value=" Saisissez le nom d'un groupe" onfocus="this.value=''" style="width: 350px;  border-radius: 7px 7px 7px 7px;box-shadow:inset 2px 0 10px #777777; "/>
+<br><br><br><center> <input id="button" height="40px" type=button title="Saisissez texte"  value="Bouton Teste" />
+</center><span id='affiche'>  </span>
+<p id="contenudonnes">
+    
+</p>
+
+       
+{% endblock %} 
+{% block scripts %} 
+<script type="text/javascript" > 
+    $(function (){
+      
+   
+  // $("#affiche").text(access_token);
+   $("#button").button().click( function (){
+    FB.getLoginStatus(function(response) {
+  if (response.status === 'connected') {
+     FB.api('/me',function (reponse){
+     alert(response.id)
+      $("#contenudonnes").text(reponse.id);
+  });
+  
+} else if (response.status === 'not_authorized') {
+    // L'utilisateur s'est connecter sur faceboo 
+    // mais l'application n'est pas autorisé 
+  } else {
+    // L'utilisateur ne s'est pas connecté
+  }
+ });
+   });
+  /*
+   * 
+   * /*("#button").button().click()(function (){
+       alert("mais je ne sais pas ce qui se passe");
+     if (typeof(FB) == 'undefined'|| FB==null ){
+ 
+  FB.api('/me',{access_token:access_token}, function(response) {
+      if (!response || response.error) {
+    alert('Error occured'+'Message'+response.error.message);
+  }else {
+  alert("la reponse "+response.id);
+  }
+} 
+   );
+   }
+   });
+   FB.api('/me?fields=groups.fields(name,id)',function (reponse){
+      alert('')
+      $("#contenudonnes").html(reponse);
+  });*/
+    
+});
+        </script>  
+    
+
+{% endblock %} 

@@ -9,31 +9,14 @@
 {% endblock %}
 	<script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/jquery-1.9.1.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/jquery-ui-1.10.3.custom.js') }}"></script>
-{% block scripts %} 
 
-{% endblock %}
   </head>
-<body>
-    <script>
-    function goLogIn(){
-        window.location.href = "{{ path('_security_check') }}";
-    }
-
-    function onFbInit() {
-        if (typeof(FB) != 'undefined' && FB != null ) {              
-            FB.Event.subscribe('auth.statusChange', function(response) {
-                if (response.session || response.authResponse) {
-                    setTimeout(goLogIn, 500);
-                } else {
-                    window.location.href = "{{ path('f_bgroupe_accueil') }}";
-                }
-            });
-        }
-    }
-</script>
+  <body >
+    {% block scriptFB_check %}
+     
+    {%endblock%}
     {{ facebook_initialize({'xfbml': true, 'fbAsyncInit': 'onFbInit();'}) }}
-       
-   
+
     <div id="container">
   <header >
       <a href="{{ path('f_bgroupe_accueil') }}"  >
@@ -57,6 +40,10 @@
     </div>
  
       
-</div> 
+</div>
+
+{% block scripts %} 
+
+{% endblock %}
 </body>
 </html>

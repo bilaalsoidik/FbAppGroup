@@ -8,7 +8,7 @@
 Vous êtes bien connecter alors à present choisissez un groupe dont vous voulez importer les données, en saisissant un nom de groupe
 <br> <span class="labele"> Rechercher un groupe &nbsp;</span> <input id="rechgroup" type="text"   value=" Saisissez le nom d'un groupe" onfocus="this.value=''" style="width: 350px;  border-radius: 7px 7px 7px 7px;box-shadow:inset 2px 0 10px #777777; "/>
 <br><br><br><center> <input id="button" height="40px" type=button title="Saisissez texte"  value="Bouton Teste" />
-</center><span id='affiche'>  </span>
+</center><span id='affiche'> acces_token du serveur ancien: {{ancien_AK }}  </span>c
 <p id="contenudonnes">
     
 </p>
@@ -22,7 +22,14 @@ Vous êtes bien connecter alors à present choisissez un groupe dont vous voulez
    
   // $("#affiche").text(access_token);
    $("#button").button().click( function (){
-    FB.getLoginStatus(function(response) {
+        
+           console.log(document.cookie);
+       // var acc=$.cookie("access_token_srv");
+       // console.log("bon on ne sait pas mais c'est"+$.cookie('fbsr_.access_token'));
+      /* console.log('ancien stoké nomé access_token'+$.cookie('fbsr_.access_token')+'\n <br>'+
+                   'ancien stoké nomé accessToken'+$.cookie('fbsr_.accessToken')+'\n <br>'+
+                   'Le nouveau'+$.cookie('access_token_srv'')+'\n <br>');*/
+   /* FB.getLoginStatus(function(response) {
   if (response.status === 'connected') {
      FB.api('/me',function (reponse){
      alert(response.id)
@@ -35,7 +42,7 @@ Vous êtes bien connecter alors à present choisissez un groupe dont vous voulez
   } else {
     // L'utilisateur ne s'est pas connecté
   }
- });
+ });*/
    });
   /*
    * 

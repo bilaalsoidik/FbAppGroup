@@ -7,10 +7,10 @@
 <link rel="stylesheet" href="{{ asset('bundles/FBgroupe/css/acceuil.css') }}" type="text/css" media="all" />
 <link href="{{asset('bundles/FBgroupe/css/Theme/jquery-ui-1.10.3.custom.css') }}" rel="stylesheet">
 {% endblock %}
-	<script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/jquery-1.9.1.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/jquery-1.9.1.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/jquery-ui-1.10.3.custom.js') }}"></script>
-
-  </head>
+<script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/jquery.cookie.js') }}"></script>
+</head>
   <body >
     {% block scriptFB_check %}
      
@@ -18,8 +18,8 @@
     {{ facebook_initialize({'xfbml': true, 'fbAsyncInit': 'onFbInit();'}) }}
 
     <div id="container">
-  <header >
-      <a href="{{ path('f_bgroupe_accueil') }}"  >
+<header>
+<a href="{{ path('f_bgroupe_accueil') }}">
 <img id="baniere" src="{{ asset('bundles/FBgroupe/images/FBgroup.png') }}"/></a>  
 <div id="menu">
 <div class="internal">

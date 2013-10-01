@@ -1,6 +1,6 @@
 {% extends "FBgroupeBundle::layout.html.twig" %}
 {% block title "Accueil" %}
-{% block scriptFB_check %}
+{% block cheker_InitFB %}
 <script>
     function goLogIn(){
         window.location.href = "{{ path('_security_check') }}";
@@ -16,12 +16,15 @@
             });       
         }
     }
+    
 </script>
 {% endblock%}
 {%block connect  %}
 
 {% endblock %}
 {% block content %}
+<p>Bonjour et bienvenue dans cette application facebook qui vous permet de recuperer les données d'un groupe facebook</p>
+<br><br>
 Dans cette application vous allez pouvoir importer pour un groupe facebook: les données d'indentification, les membres avec leurs rôles, les postes publiés, les commentaires et les personnes qui ont aimé chaque poste. Veuillez vous connectez avec facebook et donner les permissions à l'application, pour pouvoir commencer<br>
 
 <br>

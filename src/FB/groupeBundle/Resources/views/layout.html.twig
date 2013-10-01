@@ -10,39 +10,53 @@
 <script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/jquery-1.9.1.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/jquery-ui-1.10.3.custom.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/jquery.cookie.js') }}"></script>
-</head>
-  <body >
-    {% block scriptFB_check %}
+{% block scripts_declaration %} 
+
+{% endblock %}
+ </head>
+ <body  >
+    {% block cheker_InitFB %}
      
     {%endblock%}
+         
     {{ facebook_initialize({'xfbml': true, 'fbAsyncInit': 'onFbInit();'}) }}
 
     <div id="container">
 <header>
 <a href="{{ path('f_bgroupe_accueil') }}">
-<img id="baniere" src="{{ asset('bundles/FBgroupe/images/FBgroup.png') }}"/></a>  
+<img id="baniere" src="{{ asset('bundles/FBgroupe/images/FBgroup.png') }}"/></a> 
+<!--Le Menu-->
 <div id="menu">
 <div class="internal">
-    <span id="trsh1"> </span>   <a href="{{ path('f_bgroupe_accueil') }}" title="Retour à l'accueil" >
-        <span id="acc" class="menuitem" > Accueil </span> </a> <span id="trsh2"> </span>  <div id="conn" class="menu"> {{ facebook_login_button({'autologoutlink': true, 'label':'Se connecter', width:130,'size':'xlarge'}) }} </div>
+ <span id="trsh1"> </span>   
+ 
+ <!--Menu Accueil-->
+ <a href="{{ path('f_bgroupe_accueil') }}" title="Retour à l'accueil" >
+ <span id="acc" class="menuitem" > Accueil </span> </a> <span id="trsh2"> </span>
+ 
+ <!--Place d'autres comme menu Groupes-->
+ {% block autresMenus%}{% endblock%}
+ 
+ <!--Bouton de connexion facebook-->
+ <div id="conn" class="menu"> {{ facebook_login_button({'autologoutlink': true, 
+                                'label':'Se connecter', width:130,'size':'xlarge'}) }} </div>
+ 
+<!--Elements à afficher après connextion-->
 {%block connect %} {%endblock%}
 </div>
-</div>
+</div><!--Fin du menu-->
+
 </header>
+<!--les entêtes -->
 <div id="contenu"> <div id="intercontenu"> 
     
-<p>Bonjour et bienvenue dans cette application facebook qui vous permet de recuperer les données d'un groupe facebook</p>
 <div id="content">   
 {% block content %} {% endblock %}
-            </div>
-    </div>
-   
-    </div>
- 
-      
+</div>
+    </div></div> 
 </div>
 
-{% block scripts %} 
+{% block scripts2 %} 
 
 {% endblock %}
 </body>

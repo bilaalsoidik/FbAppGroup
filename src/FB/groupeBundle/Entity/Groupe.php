@@ -162,4 +162,5 @@ class Groupe
     {
         return $this->description;
     }
+    
 }

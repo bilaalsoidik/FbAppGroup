@@ -3,7 +3,7 @@ f_bgroupe:
     prefix:   /
 
 _security_check:
-  pattern:  /login_check
+  pattern:  /Init_Groupes
   defaults: { _controller: FBgroupeBundle:Accueil:login_reussi }
 
 _security_logout:

@@ -1,3 +1,9 @@
 f_bgroupe_accueil:
     pattern:  /
     defaults: { _controller: FBgroupeBundle:Accueil:index }
+f_bgroupe_getFormGp:
+    pattern:  /getFormGroup
+    defaults: { _controller: FBgroupeBundle:Accueil:getFormGroup}
+f_bgroupe_enregistrerGroupe:
+    pattern:  /enregistrerGroupe
+    defaults: { _controller: FBgroupeBundle:Accueil:enregistrerGroupe}

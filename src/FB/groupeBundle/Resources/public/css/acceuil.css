@@ -14,6 +14,7 @@ html, body{
 *{
     font-family: 'Helvetica Neue', Helvetica, Arial, 'lucida grande',Tahoma,Verdana,Arial,Sans-serif;
     font-size: 14px;  
+    line-height:20px;
 }
 root { 
     display: block;
@@ -64,24 +65,29 @@ root {
    padding-bottom: 0px;
    padding-top: 0px;
 }
-#acc{
+#acc, #groupes{
     float: left;
     /*background-color: cyan;*/ 
     left: 5px;
-    width: 120px;
+    
+    width: auto;
     height: 39px;
     top: 6px;
     position: relative;
     line-height: 39px;
 }
+#groupes{
+    margin-left:5px;
+}
 #conn{
     float: right;
     /*background-color: cyan;*/
     height: 42px;
-    top: 3px;
+    top: 6px;
     position: relative;
     line-height: 42px;
     margin-right: 5px; 
+    
 }
 #trsh1{
     position: relative;
@@ -107,11 +113,11 @@ root {
     text-decoration: none;   
 }
 #menu div span.menuitem{
-    width: auto;
+    
     height: 39px;
     top: 6px;
     position: relative;
-    padding: 0px 15px 0px 15px;
+    padding: 0px 15px 0 15px ;
     line-height: 39px;
 }
 #avatar{
@@ -128,12 +134,12 @@ font-weight: bold;
 background: #6db3f2; 
 color: white;
 /* Old browsers */
-background: linear-gradient(to bottom, #B1C4DE 0%, #8FAED5 49%, #5C8CCB 56%, #3a76c7 100%); /* W3C */
-background: -moz-linear-gradient(top, #B1C4DE 0%, #8FAED5 49%, #5C8CCB 56%, #3a76c7 100%); /* FF3.6+ */
+background: linear-gradient(to bottom, #87C1F5 0%, #61AEF3 49%, #3690f0 56%, #1e69de 100%); /* W3C */
+background: -moz-linear-gradient(top, #87C1F5 0%, #61AEF3 49%, #3690f0 56%, #1e69de 100%); /* FF3.6+ */
 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#6db3f2), color-stop(47%,#54a3ee), color-stop(56%,#3690f0), color-stop(100%,#1e69de)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top,#B1C4DE 0%, #8FAED5 49%, #5C8CCB 56%, #3a76c7 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top, #B1C4DE 0%, #8FAED5 49%, #5C8CCB 56%, #3a76c7 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top, #B1C4DE 0%, #8FAED5 49%, #5C8CCB 56%, #3a76c7 100%); /* IE10+ */
+background: -webkit-linear-gradient(top,#87C1F5 0%, #61AEF3 49%, #3690f0 56%, #1e69de 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top, #87C1F5 0%, #61AEF3 49%, #3690f0 56%, #1e69de 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top, #87C1F5 0%, #61AEF3 49%, #3690f0 56%, #1e69de 100%); /* IE10+ */
 }
 #menu div span.menuitem:hover {
 background-color: lightcyan;  

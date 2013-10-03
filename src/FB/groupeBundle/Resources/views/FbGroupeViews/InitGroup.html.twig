@@ -110,11 +110,11 @@ données, en saisissant un nom de groupe </p>
 
 <div id="contenudonnes" style="margin-top: 15px;">
 
-{% if afficheMessg==1 %} 
-        <br><br>
-        <center> <span class="labele"> {{message}}</span> </center>
-{% endif%}
- 
+{% for flashMessage in app.session.flashbag.get('note') %}
+    <div class="labele">
+        {{ flashMessage }}
+    </div>
+{% endfor %}
 </div>
 
 {% endblock %} 

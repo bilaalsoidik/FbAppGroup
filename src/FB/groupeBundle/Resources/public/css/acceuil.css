@@ -13,7 +13,7 @@ html, body{
 	height: 100%;}
 *{
     font-family: 'Helvetica Neue', Helvetica, Arial, 'lucida grande',Tahoma,Verdana,Arial,Sans-serif;
-    font-size: 14px;  
+    font-size: 15px;  
     line-height:20px;
 }
 root { 
@@ -174,24 +174,64 @@ width: auto;
     min-height:  600px;
     text-align: justify;    
 }
-#rechgroup{
-padding: 8px;
+#rechgroup{ 
 padding-left: 38px;
 width: 350px;
-border: 1px solid #f5f5f5;
-font-size: 16px;
 color: gray;
 background-image: url('http://i47.tinypic.com/r02vbq.png');
 background-repeat: no-repeat;
 background-position: -13px -16px;
+}
+.text_input{
+width: 320px;
+border-radius: 7px 7px 7px 7px;
+box-shadow:inset 2px 0 10px #777777; 
 outline: 0;
+padding: 7px;
+border: 1px solid #f5f5f5;
+font-size: 16px;
 }
 #rechgroup:focus{
   border: #1e69de  solid 2px;
    outline: 0;
    color: #000;  
 }
-.labele{
+.labele,label{
     font-weight: bolder;
-    font-size: 17px;
+    font-size: 16px;
+    
+    position: relative;
+    
+    
+}
+label{
+    
+    float: left;
+    width: 100px;
+    top:10px;
+}
+form div {
+    margin: 5px;
+    vertical-align:middle;
+}
+
+#fb_groupebundle_groupe_id,#fb_groupebundle_groupe_nom,
+#fb_groupebundle_groupe_email, #fb_groupebundle_groupe_description{
+    width: 350px;
+    padding-left: 8px;
+}
+#fb_groupebundle_groupe_type{
+    margin:5px;
+    margin-left:0px;
+}
+#fb_groupebundle_groupe_description{  
+    height: 170px;
+    
+    
+}
+form{
+    width:500px;
+}
+.boutton{
+    margin-top:10px;
 }

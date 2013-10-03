@@ -15,17 +15,15 @@ class GroupeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id')
-            ->add('nom')
-            ->add('email')
-            ->add('type','choice',array(
-                            'choices'=> array(
-                            'SECRET' => 'SECRET',
-                            'CLOSED' => 'FERME',
-                            'OPEN'   => 'OUVERT'),
-                   'multiple'=> false,
-                   'expanded'=> false,
-           ))->add('description');
+            ->add('id','text',array('attr'=> array('class'=> 'text_input')))
+            ->add('nom','text',array('attr'=> array('class'=> 'text_input')))
+            ->add('email','email',array('attr'=> array('class'=> 'text_input')))
+            ->add('type','choice',array('choices'=> array( 'SECRET' => 'SECRET',
+                                                                     'CLOSED' => 'FERME',
+                                                                     'OPEN'   => 'OUVERT'),
+                                     'multiple'=> false,
+                                     'expanded'=> false,
+           ))->add('description','textarea', array('attr'=> array('class'=> 'text_input txt_area')));
     }
     
     /**

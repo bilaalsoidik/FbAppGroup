@@ -1,5 +1,9 @@
-{# empty Twig template #}
 
-<form method="/getFormGroup" action="POST">
-    <input type="submit" value="Enregistrer le groupe"/>
-</form>
+{{ form_start(formulaire,{'method':'POST', 'action':path("f_bgroupe_ajouterGroup")}) }}
+ {{form_widget(formulaire)}}
+ {{ form_errors(formulaire) }}
+<center> <input type="submit" class="boutton" value="Enregistrer le Groupe"/></center>
+{{ form_end(formulaire) }}
+
+
+  

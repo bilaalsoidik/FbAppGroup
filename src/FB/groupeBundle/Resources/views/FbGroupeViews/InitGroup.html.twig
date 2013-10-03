@@ -1,25 +1,6 @@
 {% extends "FBgroupeBundle::layout.html.twig" %}
 {% block title "Initialisation de Groupe" %}
-{% block autresMenus%}
-<!--Menu Groupe-->
-<a href="{{ path('_security_check') }}" title="Gestion des groupes" >
- <span id="groupes" class="menuitem" > Groupes </span> </a> 
- 
-{% endblock%}
-{%block connect  %}
-<a href="{{utilisateur.link}}"> <span id="conn" class="menuitem"> {{utilisateur.name}}</span></a>  <img id="avatar" src="https://graph.facebook.com/{{utilisateur.id}}/picture" alt="photo de profile"/>  
-{% endblock %}
-{% block content %}
-<br>
-Vous êtes bien connecté alors à present choisissez un groupe parmi les groupes dont vous êtes membre et que vous voulez importer les données, en saisissant un nom de groupe
-<br><br> <span class="labele"> 
-Rechercher un groupe &nbsp;</span> <input id="rechgroup" type="text"  value=" Saisissez le nom d'un groupe" onfocus="this.value='' " style="width: 350px; border-radius: 7px 7px 7px 7px;box-shadow:inset 2px 0 10px #777777; "/><br><br><br>
-<center> 
-<input id="button" height="40px" type=button title="Saisissez texte"  value="Bouton Teste" />
-</center>
-<p id="contenudonnes">
-    
-</p>
+
 {% block scripts_declaration %} 
 <script type="text/javascript"> 
     
@@ -30,6 +11,7 @@ function InialiserRechGroupe(){
       if (!response || response.error) {
        console.log("Message d'erreur "+response.error.message);
         }
+        //On normalise les données pour que l'autocompleteur les reconnaisse car il a besoin de label et de value
        var listGroupes=$.map(response.groups.data, function(groupe) {
                             return {
                             label         : groupe.name,//Nom du groupe
@@ -55,6 +37,28 @@ function InialiserRechGroupe(){
       },
       select   : function (event, ui){
       GroupeChoisit=ui.item;
+      console.log(GroupeChoisit.privacy);
+      $("#contenudonnes").load("{{path('f_bgroupe_getFormGroup')}}",function(){
+          $("#fb_groupebundle_groupe_id").val( GroupeChoisit.value);
+           $("#fb_groupebundle_groupe_nom").val( GroupeChoisit.label);
+           $("#fb_groupebundle_groupe_email").val( GroupeChoisit.email);
+           $("#fb_groupebundle_groupe_type").val( GroupeChoisit.privacy);
+           $("#fb_groupebundle_groupe_description").val( GroupeChoisit.description);
+           $(".boutton").button();
+      });
+      
+              /*
+               * 
+               * @param {type} ul
+               * @param {type} item
+               * @returns {@exp;@call;$@pro;append@call;@call;appendTo}
+               * 
+               * .select(//value=id
+              .select("#fb_groupebundle_groupe_nom").val( GroupeChoisit.label)//label=name
+              .select("#fb_groupebundle_groupe_email").val( GroupeChoisit.email)
+              .select("#fb_groupebundle_groupe_description").val( GroupeChoisit.description)
+              .select("#fb_groupebundle_groupe_type").val(GroupeChoisit.privacy);
+               */
                return false;
                }
                })
@@ -66,15 +70,55 @@ function InialiserRechGroupe(){
       .appendTo(ul);
        };
        };
+       
        //On doit s'assurer que l'objet FB est bien initialisé.
+       //Après son initialisation il va recuperer la liste des groupes
+       //lancer le script Jquery d'initialisation de l'autocomleteur
+       
        function onFbInit() {
-        if (typeof(FB) != 'undefined' && FB != null ) {              
+        if (typeof(FB) !=='undefined' && FB !== null ) {              
            InialiserRechGroupe();   
         }
     }
  </script>
 {% endblock %}
+ 
+{% block autresMenus%}
+ 
+<!--Menu Groupe-->
+<a href="{{ path('_security_check') }}" title="Gestion des groupes" >
+<span id="groupes" class="menuitem" > Groupes </span></a> 
+ 
+{% endblock%}
+
+{%block connect  %}
+
+<!-- Données utilisateur après sa connection -->
+<!-- Nom de l'utilisateur qui est un lien vers  sa profile facebook -->
+<a href="{{utilisateur.link}}"><span id="conn" class="menuitem">{{utilisateur.name}}</span></a>
+
+<!--Photo de profile facebook-->
+<img id="avatar" src="https://graph.facebook.com/{{utilisateur.id}}/picture" alt="photo de profile"/>  
+{% endblock %}
+{% block content %}
+<!--Contenu-->
+<p>Vous êtes bien connecté alors à present choisissez un groupe parmi 
+les groupes dont vous êtes membre et que vous voulez importer les 
+données, en saisissant un nom de groupe </p> 
+
+<span class="labele">Rechercher un groupe &nbsp;</span> <input id="rechgroup" class="text_input" type="text"  value=" Saisissez le nom d'un groupe" onfocus="this.value='' " />
+
+<div id="contenudonnes" style="margin-top: 15px;">
+
+{% if afficheMessg==1 %} 
+        <br><br>
+        <center> <span class="labele"> {{message}}</span> </center>
+{% endif%}
+ 
+</div>
+
 {% endblock %} 
+
 {% block scripts2 %} 
  
 <script type="text/javascript">

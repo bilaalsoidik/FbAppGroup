@@ -5,7 +5,8 @@ f_bgroupe_accueil:
 _security_check:
   pattern:  /Init_Groupes
   defaults: { _controller: FBgroupeBundle:Accueil:login_reussi }
-  requirements:
+  
+  
 f_bgroupe_getFormGroup:
     pattern:  /Init_Groupes/formGroup
     defaults: { _controller: FBgroupeBundle:Accueil:getFormGroup}
@@ -17,3 +18,7 @@ f_bgroupe_ajouterGroup:
 _security_logout:
   pattern:  /logout
   defaults: { _controller: FBgroupeBundle:Accueil:deconnecte}
+
+f_bgroupe_getDataFromDB: 
+               pattern: /donnes/{id}&{entite}
+               defaults: { _controller: FBgroupeBundle:Accueil:deconnecte, _format: json}

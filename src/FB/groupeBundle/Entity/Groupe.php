@@ -15,7 +15,7 @@ class Groupe
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="bigint")
      * @ORM\Id
      */
     private $id;
@@ -47,13 +47,29 @@ class Groupe
      * @ORM\Column(name="Description", type="text")
      */
     private $description;
+ 
+    /**
+     * @ORM\OneToMany(targetEntity="Membre_Groupe", mappedBy="groupe", cascade={"persist", "remove"})
+     * 
+     **/
+    
+    private $membres;
+   
+    
+    /**
+    * @ORM\OneToOne(targetEntity="Utilisateur")
+    * @ORM\JoinColumn(name="id_proprietaire", referencedColumnName="id")
+    */
 
+    private $proprietaire;
+    
     /**
      * Set id
      *
      * @param string $id
      * @return Groupe
      */
+    
     public function setId($id)
     {
         $this->id = $id;
@@ -162,5 +178,39 @@ class Groupe
     {
         return $this->description;
     }
+   
+    public function __construct() {
+        $this->membres = new ArrayCollection();
+        
+    }
+    public function getMembres() {
+        return $this->membres;
+    }
+
+   
+
+    public function getProprietaire() {
+        return $this->proprietaire;
+    }
+
+    public function setProprietaire(Utilisateur $proprietaire) {
+        $this->proprietaire = $proprietaire;
+        return $this;
+    }
+   public function addMembre(Membre_Groupe $membre){
+       $this->membres[]=$membre;
+       $membre->setGroupe($this);
+   }
     
+     
+
+    /**
+     * Remove membres
+     *
+     * @param \FB\groupeBundle\Entity\Membre_Groupe $membres
+     */
+    public function removeMembre(Membre_Groupe $membre)
+    {
+        $this->membres->removeElement($membre);
+    }
 }

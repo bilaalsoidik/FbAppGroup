@@ -13,15 +13,13 @@ class AccueilController extends Controller
     }
     public function login_reussiAction(){
         $facebook = $this->get('fos_facebook.api'); 
-        $ancien_AK=$facebook->getAccessToken();
         $facebook->setExtendedAccessToken();
         $access_token=$facebook->getAccessToken();
         $temp=59*24*3600;
         setcookie('accessToken', $access_token,time()+$temp);
         $utilisateur=$facebook->api('/me');
         return $this->render('FBgroupeBundle:FbGroupeViews:InitGroup.html.twig', 
-                                  array('utilisateur'=>$utilisateur, 
-                                          'afficheMessg'=>0));
+                                  array('utilisateur'=>$utilisateur));
        }
   
    public function ajouterGroupAction(){
@@ -37,21 +35,27 @@ class AccueilController extends Controller
         $un_groupe=$formulaire->getData();
         $em->persist($un_groupe);
         $em->flush();
-        return $this->render('FBgroupeBundle:FbGroupeViews:InitGroup.html.twig',
-                        array('utilisateur'=>$utilisateur,
-                               'afficheMessg'=>1,
-                               'message'=>' Le groupe a été enregistré en base de données avec scccès'));
+        $formulaire->remove($un_groupe);
+        $this->get('session')->getFlashBag()->add(
+            'note',
+            'Le groupe a été enregistré avec scccès'
+        );
+        return $this->redirect('FBgroupeBundle:FbGroupeViews:InitGroup.html.twig',
+                             array('utilisateur'=>$utilisateur));
+       }else{
+           $this->get('session')->getFlashBag()->add(
+            'note',
+            'Il y a des erreur'
+        );
        }
-       return $this->render('FBgroupeBundle:FbGroupeViews:InitGroup.html.twig',
-                        array('utilisateur'=>$utilisateur,
-                               'afficheMessg'=>1,
-                               'message'=>'Il y a des erreurs'));
+       return $this->redirect('FBgroupeBundle:FbGroupeViews:InitGroup.html.twig',
+                            array('utilisateur'=>$utilisateur));
    }
    //recuperation du formulaire d'ajout de groupe
    public function getFormGroupAction(){
         $formulaire=$this->createForm(new GroupeType());
         return $this->render('FBgroupeBundle:FbGroupeViews:formGroup.html.twig',
-                                array('formulaire'=>$formulaire->createView()));
+                          array('formulaire'=>$formulaire->createView()));
    }
     public function  deconnecteAction(){
         

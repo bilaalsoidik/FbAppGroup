@@ -4,6 +4,7 @@ namespace FB\groupeBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use FB\groupeBundle\Form\GroupeType;
+use \Symfony\Component\HttpFoundation\Response;
 
 class AccueilController extends Controller
 {   
@@ -56,6 +57,15 @@ class AccueilController extends Controller
         $formulaire=$this->createForm(new GroupeType());
         return $this->render('FBgroupeBundle:FbGroupeViews:formGroup.html.twig',
                           array('formulaire'=>$formulaire->createView()));
+   }
+   public function getObjetAction($id , $entite){
+       $em=$this->getDoctrine()->getManager();
+       $dept=$em->getRepository("FBgroupeBundle:"+$entite);
+       $objet=$dept->find($id);
+       $serializer=$this->container->get('serializer');
+       $jsonObjet = $serializer->serialize($objet, 'json');
+       
+       return new Response($jsonObjet);
    }
     public function  deconnecteAction(){
         

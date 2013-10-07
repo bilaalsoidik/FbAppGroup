@@ -3,7 +3,7 @@
 namespace FB\groupeBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Groupe
  *
@@ -55,13 +55,12 @@ class Groupe
     
     private $membres;
    
-    
     /**
-    * @ORM\OneToOne(targetEntity="Utilisateur")
-    * @ORM\JoinColumn(name="id_proprietaire", referencedColumnName="id")
-    */
-
-    private $proprietaire;
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="groupe", cascade={"persist", "remove"})
+     * 
+     **/
+    
+    private $posts;
     
     /**
      * Set id
@@ -187,16 +186,6 @@ class Groupe
         return $this->membres;
     }
 
-   
-
-    public function getProprietaire() {
-        return $this->proprietaire;
-    }
-
-    public function setProprietaire(Utilisateur $proprietaire) {
-        $this->proprietaire = $proprietaire;
-        return $this;
-    }
    public function addMembre(Membre_Groupe $membre){
        $this->membres[]=$membre;
        $membre->setGroupe($this);
@@ -212,5 +201,38 @@ class Groupe
     public function removeMembre(Membre_Groupe $membre)
     {
         $this->membres->removeElement($membre);
+    }
+
+    /**
+     * Add posts
+     *
+     * @param \FB\groupeBundle\Entity\Post $posts
+     * @return Groupe
+     */
+    public function addPost(\FB\groupeBundle\Entity\Post $posts)
+    {
+        $this->posts[] = $posts;
+    
+        return $this;
+    }
+
+    /**
+     * Remove posts
+     *
+     * @param \FB\groupeBundle\Entity\Post $posts
+     */
+    public function removePost(\FB\groupeBundle\Entity\Post $posts)
+    {
+        $this->posts->removeElement($posts);
+    }
+
+    /**
+     * Get posts
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPosts()
+    {
+        return $this->posts;
     }
 }

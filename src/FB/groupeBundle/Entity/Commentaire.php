@@ -43,7 +43,7 @@ class Commentaire
 
     /**
      * 
-     * @ORM\ManyToOne(targetEntity="Utilisateur")
+     * @ORM\OneToOne(targetEntity="Utilisateur")
      * @ORM\JoinColumn(name="id_commentateur", referencedColumnName="id")
      * 
      * 
@@ -52,7 +52,7 @@ class Commentaire
     
     /**
      * 
-     * @ORM\ManyToOne(targetEntity="Post")
+     * @ORM\ManyToOne(targetEntity="Post",inversedBy="commentaires")
      * @ORM\JoinColumn(name="id_post", referencedColumnName="id")
      * 
      * 

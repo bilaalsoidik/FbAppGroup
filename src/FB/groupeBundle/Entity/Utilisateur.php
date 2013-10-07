@@ -40,23 +40,6 @@ class Utilisateur
      * @ORM\Column(name="genre", type="string", length=100, nullable=true)
      */
     private $genre;
-    
-    function __construct() {
-        $this->commentaires=new ArrayCollection();
-        $this->groupes  =new ArrayCollection();
-        $this->posts    =new ArrayCollection();
-        
-    }
-
-        /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
     /**
      * @ORM\OneToMany(targetEntity="Membre_Groupe", mappedBy="utilisateur" )
      **/
@@ -67,14 +50,22 @@ class Utilisateur
      **/
     private $posts;
     
+    function __construct() {
+        $this->commentaires=new ArrayCollection();
+        $this->groupes  =new ArrayCollection();
+        $this->posts    =new ArrayCollection();
+        
+    }
+
     /**
-     * @ORM\OneToMany(targetEntity="Commentaire", mappedBy="commentateur" )
-     **/
-    private $commentaires;
-    
-    
-    
-    
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
     /**
      * Set id
      *
@@ -217,26 +208,4 @@ class Utilisateur
         $this->posts->removeElement($posts);
     }
 
-    /**
-     * Add commentaires
-     *
-     * @param \FB\groupeBundle\Entity\Commentaire $commentaires
-     * @return Utilisateur
-     */
-    public function addCommentaire(\FB\groupeBundle\Entity\Commentaire $commentaires)
-    {
-        $this->commentaires[] = $commentaires;
-    
-        return $this;
-    }
-
-    /**
-     * Remove commentaires
-     *
-     * @param \FB\groupeBundle\Entity\Commentaire $commentaires
-     */
-    public function removeCommentaire(\FB\groupeBundle\Entity\Commentaire $commentaires)
-    {
-        $this->commentaires->removeElement($commentaires);
-    }
 }

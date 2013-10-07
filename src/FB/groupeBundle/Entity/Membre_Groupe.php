@@ -22,13 +22,13 @@ class Membre_Groupe
     private $id;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Groupe")
+    * @ORM\ManyToOne(targetEntity="Groupe",inversedBy="membres")
     * @ORM\JoinColumn(name="id_groupe", referencedColumnName="id")
     */
     private $groupe;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Utilisateur")
+     * @ORM\ManyToOne(targetEntity="Utilisateur",inversedBy="groupes")
      * @ORM\JoinColumn(name="id_utilisateur", referencedColumnName="id")
      */
     private $utilisateur;
@@ -40,6 +40,12 @@ class Membre_Groupe
      */
     private $estAdmin;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="estCreateur", type="boolean", nullable=true)
+     */
+    private $estCreateur;
 
     /**
      * Get id
@@ -57,10 +63,10 @@ class Membre_Groupe
      * @param integer $idGroupe
      * @return Membre_Groupe
      */
-    public function setGroupe($groupe)
+    public function setGroupe(Groupe $groupe)
     {
         $this->groupe = $groupe;
-    
+       
         return $this;
     }
 
@@ -97,13 +103,29 @@ class Membre_Groupe
         return $this->utilisateur;
     }
 
+  
+
+    /**
+     * Get estAdmin
+     *
+     * @return boolean 
+     */
+    
+     
+    public function __construct(){
+        //par defaut
+        $this->estAdmin=false;
+        $this->estCreateur=false;
+    }
+    
+
     /**
      * Set estAdmin
      *
      * @param boolean $estAdmin
      * @return Membre_Groupe
      */
-    public function setEstAdnin($estAdmin)
+    public function setEstAdmin($estAdmin)
     {
         $this->estAdmin = $estAdmin;
     
@@ -115,13 +137,31 @@ class Membre_Groupe
      *
      * @return boolean 
      */
-    public function getEstAdnin()
+    public function getEstAdmin()
     {
         return $this->estAdmin;
     }
-     
-    public function __construct(){
-        //par defaut
-        $this->estAdmin=false;
+
+    /**
+     * Set estCreateur
+     *
+     * @param boolean $estCreateur
+     * @return Membre_Groupe
+     */
+    public function setEstCreateur($estCreateur)
+    {
+        $this->estCreateur = $estCreateur;
+    
+        return $this;
+    }
+
+    /**
+     * Get estCreateur
+     *
+     * @return boolean 
+     */
+    public function getEstCreateur()
+    {
+        return $this->estCreateur;
     }
 }

@@ -103,11 +103,17 @@ class Post
     }
     /**
      * 
-     * @ORM\ManyToOne(targetEntity="Utilisateur")
+     * @ORM\ManyToOne(targetEntity="Utilisateur", inversedBy="posts")
      * @ORM\JoinColumn(name="id_publicateur", referencedColumnName="id") 
      */
     private $publicateur;
 
+    /**
+     * 
+     * @ORM\ManyToOne(targetEntity="Groupe", inversedBy="posts")
+     * @ORM\JoinColumn(name="id_groupe", referencedColumnName="id") 
+     */
+    private $groupe;
     
     /**
     * @ORM\ManyToMany(targetEntity="Utilisateur")
@@ -429,5 +435,28 @@ class Post
     public function removeCommentaire(Commentaire $commentaire)
     {
         $this->commentaires->removeElement($commentaire);
+    }
+
+    /**
+     * Set groupe
+     *
+     * @param \FB\groupeBundle\Entity\Groupe $groupe
+     * @return Post
+     */
+    public function setGroupe(\FB\groupeBundle\Entity\Groupe $groupe = null)
+    {
+        $this->groupe = $groupe;
+    
+        return $this;
+    }
+
+    /**
+     * Get groupe
+     *
+     * @return \FB\groupeBundle\Entity\Groupe 
+     */
+    public function getGroupe()
+    {
+        return $this->groupe;
     }
 }

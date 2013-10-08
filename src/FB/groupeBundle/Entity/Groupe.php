@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Groupe
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="FB\groupeBundle\Entity\GroupeRepository")
+ * @ORM\Entity
  */
 class Groupe
 {
@@ -39,6 +39,7 @@ class Groupe
      *
      * @ORM\Column(name="Type", type="string", length=20)
      */
+    
     private $type;
 
     /**
@@ -49,7 +50,7 @@ class Groupe
     private $description;
  
     /**
-     * @ORM\OneToMany(targetEntity="Membre_Groupe", mappedBy="groupe", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="MembreGroupe", mappedBy="groupe", cascade={"persist", "remove"})
      * 
      **/
     
@@ -178,15 +179,12 @@ class Groupe
         return $this->description;
     }
    
-    public function __construct() {
-        $this->membres = new ArrayCollection();
-        
-    }
+    
     public function getMembres() {
         return $this->membres;
     }
 
-   public function addMembre(Membre_Groupe $membre){
+   public function addMembre(MembreGroupe $membre){
        $this->membres[]=$membre;
        $membre->setGroupe($this);
    }
@@ -196,9 +194,9 @@ class Groupe
     /**
      * Remove membres
      *
-     * @param \FB\groupeBundle\Entity\Membre_Groupe $membres
+     * @param MembreGroupe $membres
      */
-    public function removeMembre(Membre_Groupe $membre)
+    public function removeMembre(MembreGroupe $membre)
     {
         $this->membres->removeElement($membre);
     }
@@ -206,12 +204,12 @@ class Groupe
     /**
      * Add posts
      *
-     * @param \FB\groupeBundle\Entity\Post $posts
+     * @param Post $posts
      * @return Groupe
      */
-    public function addPost(\FB\groupeBundle\Entity\Post $posts)
+    public function addPost(Post $post)
     {
-        $this->posts[] = $posts;
+        $this->posts[] = $post;
     
         return $this;
     }
@@ -219,20 +217,29 @@ class Groupe
     /**
      * Remove posts
      *
-     * @param \FB\groupeBundle\Entity\Post $posts
+     * @param Post $posts
      */
-    public function removePost(\FB\groupeBundle\Entity\Post $posts)
+    public function removePost(Post $post)
     {
-        $this->posts->removeElement($posts);
+        $this->posts->removeElement($post);
     }
 
     /**
      * Get posts
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return Collection 
      */
     public function getPosts()
     {
         return $this->posts;
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->membres = new ArrayCollection();
+        $this->posts = new ArrayCollection();
+    }
+    
 }

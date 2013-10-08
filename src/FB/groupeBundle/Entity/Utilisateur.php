@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Utilisateur
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="FB\groupeBundle\Entity\UtilisateurRepository")
+ * @ORM\Entity
  */
 class Utilisateur
 {
@@ -41,7 +41,7 @@ class Utilisateur
      */
     private $genre;
     /**
-     * @ORM\OneToMany(targetEntity="Membre_Groupe", mappedBy="utilisateur" )
+     * @ORM\OneToMany(targetEntity="MembreGroupe", mappedBy="utilisateur" )
      **/
     private $groupes;
     
@@ -160,38 +160,13 @@ class Utilisateur
         return $this->commentaires;
     }
 
-
-
-    /**
-     * Add groupes
-     *
-     * @param \FB\groupeBundle\Entity\Membre_Groupe $groupes
-     * @return Utilisateur
-     */
-    public function addGroupe(\FB\groupeBundle\Entity\Membre_Groupe $groupes)
-    {
-        $this->groupes[] = $groupes;
-    
-        return $this;
-    }
-
-    /**
-     * Remove groupes
-     *
-     * @param \FB\groupeBundle\Entity\Membre_Groupe $groupes
-     */
-    public function removeGroupe(\FB\groupeBundle\Entity\Membre_Groupe $groupes)
-    {
-        $this->groupes->removeElement($groupes);
-    }
-
     /**
      * Add posts
      *
-     * @param \FB\groupeBundle\Entity\Post $posts
+     * @param Post $posts
      * @return Utilisateur
      */
-    public function addPost(\FB\groupeBundle\Entity\Post $posts)
+    public function addPost(Post $posts)
     {
         $this->posts[] = $posts;
     
@@ -201,11 +176,41 @@ class Utilisateur
     /**
      * Remove posts
      *
-     * @param \FB\groupeBundle\Entity\Post $posts
+     * @param Post $posts
      */
-    public function removePost(\FB\groupeBundle\Entity\Post $posts)
+    public function removePost(Post $posts)
     {
         $this->posts->removeElement($posts);
     }
 
+
+    /**
+     * Add groupes
+     *
+     * @param  MembreGroupe $membreGroupes
+     * @return Utilisateur
+     */
+    public function addGroupe(MembreGroupe $groupe)
+    {
+        $this->groupes[] = $groupe;
+    
+        return $this;
+    }
+
+    /**
+     * Remove groupes
+     *
+     * @param $membreGroupes
+     */
+    public function removeGroupe(MembreGroupe $groupe)
+    {
+        $this->groupes->removeElement($groupe);
+    }
+
+    /**
+     * Get groupes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    
 }

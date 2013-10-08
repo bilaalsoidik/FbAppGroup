@@ -5,12 +5,12 @@ namespace FB\groupeBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Membre_Groupe
+ * MembreGroupe
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="FB\groupeBundle\Entity\Membre_GroupeRepository")
+ * @ORM\Entity
  */
-class Membre_Groupe
+class MembreGroupe
 {
     /**
      * @var integer
@@ -33,7 +33,7 @@ class Membre_Groupe
      */
     private $utilisateur;
 
-    /**
+    /** 
      * @var boolean
      *
      * @ORM\Column(name="estAdmin", type="boolean", nullable=true)
@@ -61,7 +61,7 @@ class Membre_Groupe
      * Set idGroupe
      *
      * @param integer $idGroupe
-     * @return Membre_Groupe
+     * @return MembreGroupe
      */
     public function setGroupe(Groupe $groupe)
     {
@@ -83,8 +83,8 @@ class Membre_Groupe
     /**
      * Set idUtilisateur
      *
-     * @param string $idUtilisateur
-     * @return Membre_Groupe
+     * @param string $utilisateur
+     * @return MembreGroupe
      */
     public function setUtilisateur($utilisateur)
     {
@@ -123,7 +123,7 @@ class Membre_Groupe
      * Set estAdmin
      *
      * @param boolean $estAdmin
-     * @return Membre_Groupe
+     * @return MembreGroupe
      */
     public function setEstAdmin($estAdmin)
     {
@@ -146,7 +146,7 @@ class Membre_Groupe
      * Set estCreateur
      *
      * @param boolean $estCreateur
-     * @return Membre_Groupe
+     * @return MembreGroupe
      */
     public function setEstCreateur($estCreateur)
     {

@@ -45,15 +45,30 @@ class Groupe
     /**
      * @var text
      *
-     * @ORM\Column(name="Description", type="text")
+     * @ORM\Column(name="Description", type="text",nullable=true)
      */
     private $description;
  
     /**
+     * 
+     * @ORM\OneToOne(targetEntity="Utilisateur")
+     * @ORM\JoinColumn(name="id_createur", referencedColumnName="id", nullable=true)
+     * 
+     */
+    private $createur;
+    
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="nbrMembres", type="integer", nullable=true)
+     *
+     */
+    private $nbrMembres;
+    
+    /**
      * @ORM\OneToMany(targetEntity="MembreGroupe", mappedBy="groupe", cascade={"persist", "remove"})
      * 
      **/
-    
     private $membres;
    
     /**
@@ -63,12 +78,8 @@ class Groupe
     
     private $posts;
     
-    /**
-     * Set id
-     *
-     * @param string $id
-     * @return Groupe
-     */
+    
+    
     
     public function setId($id)
     {
@@ -122,7 +133,6 @@ class Groupe
     
         return $this;
     }
-
     /**
      * Get email
      *
@@ -132,7 +142,6 @@ class Groupe
     {
         return $this->email;
     }
-
     /**
      * Set type
      *
@@ -223,7 +232,6 @@ class Groupe
     {
         $this->posts->removeElement($post);
     }
-
     /**
      * Get posts
      *
@@ -242,4 +250,49 @@ class Groupe
         $this->posts = new ArrayCollection();
     }
     
+
+    /**
+     * Set nbrMembres
+     *
+     * @param integer $nbrMembres
+     * @return Groupe
+     */
+    public function setNbrMembres($nbrMembres)
+    {
+        $this->nbrMembres = $nbrMembres;
+    
+        return $this;
+    }
+    /**
+     * Get nbrMembres
+     *
+     * @return integer 
+     */
+    public function getNbrMembres()
+    {
+        return $this->nbrMembres;
+    }
+
+    /**
+     * Set createur
+     *
+     * @param Utilisateur $createur
+     * @return Groupe
+     */
+    public function setCreateur(Utilisateur $createur = null)
+    {
+        $this->createur = $createur;
+    
+        return $this;
+    }
+
+    /**
+     * Get createur
+     *
+     * @return \FB\groupeBundle\Entity\Utilisateur 
+     */
+    public function getCreateur()
+    {
+        return $this->createur;
+    }
 }

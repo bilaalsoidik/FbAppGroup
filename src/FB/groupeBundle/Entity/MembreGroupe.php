@@ -41,13 +41,6 @@ class MembreGroupe
     private $estAdmin;
 
     /**
-     * @var boolean
-     *
-     * @ORM\Column(name="estCreateur", type="boolean", nullable=true)
-     */
-    private $estCreateur;
-
-    /**
      * Get id
      *
      * @return integer 
@@ -142,26 +135,5 @@ class MembreGroupe
         return $this->estAdmin;
     }
 
-    /**
-     * Set estCreateur
-     *
-     * @param boolean $estCreateur
-     * @return MembreGroupe
-     */
-    public function setEstCreateur($estCreateur)
-    {
-        $this->estCreateur = $estCreateur;
     
-        return $this;
-    }
-
-    /**
-     * Get estCreateur
-     *
-     * @return boolean 
-     */
-    public function getEstCreateur()
-    {
-        return $this->estCreateur;
-    }
 }

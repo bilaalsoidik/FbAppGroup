@@ -60,7 +60,7 @@ class Post
     /**
      * @var string
      *
-     * @ORM\Column(name="nom", type="string", length=100, nullable = true)
+     * @ORM\Column(name="nom", type="text", nullable = true)
      */
     private $nom;
 
@@ -116,7 +116,7 @@ class Post
     private $groupe;
     
     /**
-    * @ORM\ManyToMany(targetEntity="Utilisateur")
+    * @ORM\ManyToMany(targetEntity="Utilisateur", cascade={"persist", "remove"})
     * @ORM\JoinTable(name="Jaimes",
     * joinColumns={@ORM\JoinColumn(name="id_post", 
     * referencedColumnName="id")},

@@ -23,10 +23,30 @@ class Utilisateur
     /**
      * @var string
      *
+     * @ORM\Column(name="username", type="string", length=100)
+     */
+    private $username;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nomEntier", type="string", length=100)
+     */
+    private $nomEntier;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="nom", type="string", length=100)
      */
     private $nom;
-
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="prenom", type="string", length=100)
+     */
+    private $prenom;
+    
+    
     /**
      * @var string
      *
@@ -37,9 +57,9 @@ class Utilisateur
     /**
      * @var string
      *
-     * @ORM\Column(name="genre", type="string", length=100, nullable=true)
+     * @ORM\Column(name="sexe", type="string", length=100, nullable=true)
      */
-    private $genre;
+    private $sexe;
     /**
      * @ORM\OneToMany(targetEntity="MembreGroupe", mappedBy="utilisateur" )
      **/
@@ -126,26 +146,26 @@ class Utilisateur
     }
 
     /**
-     * Set genre
+     * Set sexe
      *
-     * @param string $genre
+     * @param string $sexe
      * @return Utilisateur
      */
-    public function setGenre($genre)
+    public function setSexe($sexe)
     {
-        $this->genre = $genre;
+        $this->sexe = $sexe;
     
         return $this;
     }
 
     /**
-     * Get genre
+     * Get sexe
      *
      * @return string 
      */
-    public function getGenre()
+    public function getSexe()
     {
-        return $this->genre;
+        return $this->sexe;
     }
 
     public function getGroupes() {
@@ -213,4 +233,73 @@ class Utilisateur
      * @return \Doctrine\Common\Collections\Collection 
      */
     
+
+    /**
+     * Set username
+     *
+     * @param string $username
+     * @return Utilisateur
+     */
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    
+        return $this;
+    }
+
+    /**
+     * Get username
+     *
+     * @return string 
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * Set nomEntier
+     *
+     * @param string $nomEntier
+     * @return Utilisateur
+     */
+    public function setNomEntier($nomEntier)
+    {
+        $this->nomEntier = $nomEntier;
+    
+        return $this;
+    }
+
+    /**
+     * Get nomEntier
+     *
+     * @return string 
+     */
+    public function getNomEntier()
+    {
+        return $this->nomEntier;
+    }
+
+    /**
+     * Set prenom
+     *
+     * @param string $prenom
+     * @return Utilisateur
+     */
+    public function setPrenom($prenom)
+    {
+        $this->prenom = $prenom;
+    
+        return $this;
+    }
+
+    /**
+     * Get prenom
+     *
+     * @return string 
+     */
+    public function getPrenom()
+    {
+        return $this->prenom;
+    }
 }

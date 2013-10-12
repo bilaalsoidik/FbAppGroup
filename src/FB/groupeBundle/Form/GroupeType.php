@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class GroupeType extends AbstractType
 {
         /**
-     * @param FormBuilderInterface $builder
+     * @param FormBuilderInterface $builder 
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -23,7 +23,7 @@ class GroupeType extends AbstractType
                                                                      'OPEN'   => 'OUVERT'),
                                      'multiple'=> false,
                                      'expanded'=> false,
-           ))->add('description','textarea', array('attr'=> array('class'=> 'text_input txt_area')));
+           ))->add('description','textarea', array('required' => false,'attr'=> array('class'=> 'text_input txt_area')));
     }
     
     /**

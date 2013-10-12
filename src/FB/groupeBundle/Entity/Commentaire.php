@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
  * Commentaire
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="FB\groupeBundle\Entity\CommentaireRepository")
  */
 class Commentaire
 {

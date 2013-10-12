@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Post
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="FB\groupeBundle\Entity\PostRepository")
  */
 class Post
 {
@@ -78,6 +77,12 @@ class Post
      */
     private $dateHeurCreation;
 
+    /**
+     * @var \DateTime  
+     *
+     * @ORM\Column(name="date_heur_update", type="datetime")
+     */
+    private $dateHeurUpdate;
      /**
      * @var integer
      *
@@ -458,5 +463,28 @@ class Post
     public function getGroupe()
     {
         return $this->groupe;
+    }
+
+    /**
+     * Set dateHeurUpdate
+     *
+     * @param \DateTime $dateHeurUpdate
+     * @return Post
+     */
+    public function setDateHeurUpdate($dateHeurUpdate)
+    {
+        $this->dateHeurUpdate = $dateHeurUpdate;
+    
+        return $this;
+    }
+
+    /**
+     * Get dateHeurUpdate
+     *
+     * @return \DateTime 
+     */
+    public function getDateHeurUpdate()
+    {
+        return $this->dateHeurUpdate;
     }
 }

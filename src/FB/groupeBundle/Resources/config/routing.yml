@@ -14,11 +14,17 @@ f_bgroupe_getFormGroup:
 f_bgroupe_ajouterGroup:
     pattern:  /Init_Groupes/ajouterGroup
     defaults: { _controller: FBgroupeBundle:Accueil:ajouterGroup}
+f_bgroupe_supprimerGroup:
+    pattern: /Init_Groupes/suppGrp/{idgp}
+    defaults: {_controller: FBgroupeBundle:Accueil:supprimerGroup,_format: json}
+FB_importMb:
+    pattern : /Init_Groupes/importMembre
+    defaults: {_controller: FBgroupeBundle:Accueil:supprimerGroup,_format: json}
     
 _security_logout:
   pattern:  /logout
-  defaults: { _controller: FBgroupeBundle:Accueil:deconnecte}
+  defaults: { _controller: FBgroupeBundle:ImportController:deconnecte}
 
-f_bgroupe_getDataFromDB: 
+f_bgroupe_getObjet: 
                pattern: /donnes/{id}&{entite}
-               defaults: { _controller: FBgroupeBundle:Accueil:deconnecte, _format: json}
+               defaults: { _controller: FBgroupeBundle:Accueil:getObjet, _format: json}

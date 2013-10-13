@@ -245,7 +245,7 @@ class Groupe
      * Constructor
      */
     public function __construct()
-    {
+    {   
         $this->membres = new ArrayCollection();
         $this->posts = new ArrayCollection();
     }

@@ -74,6 +74,10 @@ class Commentaire
      * @param string $id
      * @return Commentaire
      */
+    function __construct($id) {
+        $this->id = $id;
+    }
+
     public function setId($id)
     {
         $this->id = $id;

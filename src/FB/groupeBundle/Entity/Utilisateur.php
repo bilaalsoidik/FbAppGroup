@@ -70,7 +70,8 @@ class Utilisateur
      **/
     private $posts;
     
-    function __construct() {
+    function __construct($id) {
+        $this->id=$id;
         $this->commentaires=new ArrayCollection();
         $this->groupes  =new ArrayCollection();
         $this->posts    =new ArrayCollection();

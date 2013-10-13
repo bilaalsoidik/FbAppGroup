@@ -392,8 +392,8 @@ class Post
         $this->publicateur = $publicateur;
     }
     
-    function __construct() {
-        
+    function __construct($id) {
+        $this->id=$id;
         $this->jaimes=new ArrayCollection();
         $this->commentaires=new ArrayCollection();
         //par defaut

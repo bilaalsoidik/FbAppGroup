@@ -1,5 +1,9 @@
 f_bgroupe:
     resource: "@FBgroupeBundle/Resources/config/routing.yml"
     prefix:   /
-
-
+f_bimportdata:
+    resource: "@FBgroupeBundle/Controller/ImportDataController.php"
+    type:     annotation
+f_b_accueil:
+    resource: "@FBgroupeBundle/Controller/AccueilController.php"
+    type:     annotation

@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  * Post
  *
  * @ORM\Table()
+ * @ORM\Entity
  */
 class Post
 {

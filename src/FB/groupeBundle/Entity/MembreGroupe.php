@@ -12,27 +12,29 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MembreGroupe
 {
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
-
+    
     /**
     * @ORM\ManyToOne(targetEntity="Groupe",inversedBy="membres")
+    * @ORM\Id
     * @ORM\JoinColumn(name="id_groupe", referencedColumnName="id")
     */
     private $groupe;
 
     /**
+     * 
      * @ORM\ManyToOne(targetEntity="Utilisateur",inversedBy="groupes")
+     * @ORM\Id
      * @ORM\JoinColumn(name="id_utilisateur", referencedColumnName="id")
      */
     private $utilisateur;
 
+    public function __construct(Groupe $gp, Utilisateur $usr){
+       $this->groupe=$gp;
+       $this->utilisateur=$usr;
+        //par defaut
+        $this->estAdmin=false;
+        
+    }
     /** 
      * @var boolean
      *
@@ -46,15 +48,7 @@ class MembreGroupe
      * @ORM\Column(name="dateInscription", type="datetime")
      */
     private $dateInscription;
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
+    
 
     /**
      * Set idGroupe
@@ -102,22 +96,7 @@ class MembreGroupe
         return $this->utilisateur;
     }
 
-  
-
-    /**
-     * Get estAdmin
-     *
-     * @return boolean 
-     */
-    
-     
-    public function __construct(){
-        //par defaut
-        $this->estAdmin=false;
-        $this->estCreateur=false;
-    }
-    
-
+ 
     /**
      * Set estAdmin
      *

@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Commentaire
  *
  * @ORM\Table()
+ * @ORM\Entity
  */
 class Commentaire
 {

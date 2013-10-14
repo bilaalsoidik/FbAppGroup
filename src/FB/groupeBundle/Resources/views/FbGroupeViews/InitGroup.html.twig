@@ -2,84 +2,28 @@
 {% block title "Initialisation de Groupe" %}
 
 {% block scripts_declaration %} 
+<script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/init_groupes.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/import_data.js') }}"></script>
 <script type="text/javascript"> 
-    
-var GroupeChoisit;
-function InialiserRechGroupe(){
-      //Recuperation de la liste des groupes à partir de facebook
-      FB.api('me?fields=groups.fields(name,id,icon,email,privacy,description)&&access_token='+$.cookie('accessToken'), function(response){ 
-      if (!response || response.error) {
-       console.log("Message d'erreur "+response.error.message);
-        }
-        //On normalise les données pour que l'autocompleteur les reconnaisse car il a besoin de label et de value
-       var listGroupes=$.map(response.groups.data, function(groupe) {
-                            return {
-                            label         : groupe.name,//Nom du groupe
-                            value         : groupe.id,  //Id du groupe
-                            icone         : groupe.icon,
-                            email         : groupe.email,
-                            privacy       : groupe.privacy,
-                            description   : groupe.description
-                                   };
-                                   });
-                                   
-        initAutoComlete(listGroupes);
-        
-       });}
-    
-    function initAutoComlete(listGroupes){
-      $("#rechgroup").autocomplete({
-      minLength: 1,
-      source   : listGroupes ,
-      focus    : function(event,ui){
-      $("#rechgroup").val( ui.item .label);
-        return false; 
-      },
-      select   : function (event, ui){
-      GroupeChoisit=ui.item;
-      console.log(GroupeChoisit.privacy);
-      $("#contenudonnes").load("{{path('f_bgroupe_getFormGroup')}}",function(){
-          $("#fb_groupebundle_groupe_id").val( GroupeChoisit.value);
-           $("#fb_groupebundle_groupe_nom").val( GroupeChoisit.label);
-           $("#fb_groupebundle_groupe_email").val( GroupeChoisit.email);
-           $("#fb_groupebundle_groupe_type").val( GroupeChoisit.privacy);
-           $("#fb_groupebundle_groupe_description").val( GroupeChoisit.description);
-           $(".boutton").button();
-      });
-      
-              /*
-               * 
-               * @param {type} ul
-               * @param {type} item
-               * @returns {@exp;@call;$@pro;append@call;@call;appendTo}
-               * 
-               * .select(//value=id
-              .select("#fb_groupebundle_groupe_nom").val( GroupeChoisit.label)//label=name
-              .select("#fb_groupebundle_groupe_email").val( GroupeChoisit.email)
-              .select("#fb_groupebundle_groupe_description").val( GroupeChoisit.description)
-              .select("#fb_groupebundle_groupe_type").val(GroupeChoisit.privacy);
-               */
-               return false;
-               }
-               })
-      .data("ui-autocomplete")._renderItem = function( ul, item ) {
-      return $("<li>")
-      .append("<a><div><img src='"+item.icone+"' style=' height: 35px;width: 35px; top: 16px ;float: left; right 10px'/>"+
-              "<div style=' padding-left:56px;  position: relative; '> "+ item.label +" </div> "+
-              "<div style=' padding-left:56px;  position: relative;  '> Id  groupe : "+ item.value +" </div></div></a>")
-      .appendTo(ul);
-       };
-       };
-       
-       //On doit s'assurer que l'objet FB est bien initialisé.
-       //Après son initialisation il va recuperer la liste des groupes
-       //lancer le script Jquery d'initialisation de l'autocomleteur
-       
        function onFbInit() {
         if (typeof(FB) !=='undefined' && FB !== null ) {              
-           InialiserRechGroupe();   
-        }
-    }
+           InialiserRechGroupe("{{path('f_bgroupe_getFormGroup')}}");   
+        }  }
+
+ /* (function poll() {
+    setTimeout(function () {
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: 'http://somewhere.com/rest/123',
+            success: function (data) {
+                MyNamespace.myFunction(data); //DO ANY PROCESS HERE
+            },
+            complete: poll
+        });
+    }, 5000);
+})();*/
+  
  </script>
 {% endblock %}
  
@@ -92,6 +36,8 @@ function InialiserRechGroupe(){
 {% endblock%}
 
 {%block connect  %}
+
+{% set utilisateur=app.session.get('utilisateur')%}
 
 <!-- Données utilisateur après sa connection -->
 <!-- Nom de l'utilisateur qui est un lien vers  sa profile facebook -->
@@ -106,24 +52,56 @@ function InialiserRechGroupe(){
 les groupes dont vous êtes membre et que vous voulez importer les 
 données, en saisissant un nom de groupe </p> 
 
-<span class="labele">Rechercher un groupe &nbsp;</span> <input id="rechgroup" class="text_input" type="text"  value=" Saisissez le nom d'un groupe" onfocus="this.value='' " />
-
+<span class="labele"> &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+ Rechercher un groupe &nbsp;&nbsp;&nbsp;</span>   <input id="rechgroup" class="text_input" type="text"  value=" Saisissez le nom d'un groupe" onfocus="this.value='' " /> 
+ <center></center>
+                               
 <div id="contenudonnes" style="margin-top: 15px;">
-
+ {% block flash%}                         
 {% for flashMessage in app.session.flashbag.get('note') %}
-    <div class="labele">
+    <center><div id="flash" class="labele" style="background-color: azure">
         {{ flashMessage }}
-    </div>
+    </div></center> 
+        
 {% endfor %}
-</div>
+{% endblock%}
+    <ul >
+        {% set i=0%}
+    {% for groupe in groupes%}
+            
+            <li ><div class="liengp cl1" > <a  href="https://www.facebook.com/{{groupe.id}}"> {{groupe.nom}}</a>  </div>
+                <div class="actions cl2" ><a id="importerMembres" href="#1{{i}}" onclick="importerMembres({{groupe.id}},'fff');"> Importer les membres</a></div>
+                <div class="actions cl1" ><a id="importerPosts" href="#2{{i}}" onclick="importerPosts({{groupe.id}});" > Importer les postes</a> </div>
+                <div class="actions cl2" ><a id="suprimerGp" href="#3{{i}}" onclick="supprimerGp({{i}},{{ path('f_bgroupe_supprimerGroup',{ idgp:groupe.id}) }});" > Supprimer le groupe</a> </div> 
+            </li>
+            {% set i=i+1%}
+    {% endfor%}
+    </ul>
 
+
+<div  id="progress">
+<img id="progress-img"   src="{{ asset('bundles/FBgroupe/images/Progression.gif') }}"/> 
+En progression...
+</div>
+ <div hidden id="dialog"></div>
 {% endblock %} 
 
 {% block scripts2 %} 
  
 <script type="text/javascript">
-            
+//<![CDATA[ 
+function enleveFlash(){
     
+  
+}
+$(function(){
+    $("#progress").hide();
+    setTimeout(function (){
+        var options={};
+    $( "#contenudonnes.labele" ).hide( "pulsate", options, 1000);
+    },2000);
+});
+
 </script>  
     
 

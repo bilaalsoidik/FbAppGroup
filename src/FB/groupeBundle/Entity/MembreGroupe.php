@@ -42,14 +42,6 @@ class MembreGroupe
      */
     private $estAdmin;
 
-    /** 
-     * @var datetime
-     *
-     * @ORM\Column(name="dateInscription", type="datetime")
-     */
-    private $dateInscription;
-    
-
     /**
      * Set idGroupe
      *
@@ -122,26 +114,4 @@ class MembreGroupe
 
     
 
-    /**
-     * Set dateInscription
-     *
-     * @param \DateTime $dateInscription
-     * @return MembreGroupe
-     */
-    public function setDateInscription($dateInscription)
-    {
-        $this->dateInscription = $dateInscription;
-    
-        return $this;
-    }
-
-    /**
-     * Get dateInscription
-     *
-     * @return \DateTime 
-     */
-    public function getDateInscription()
-    {
-        return $this->dateInscription;
-    }
 }

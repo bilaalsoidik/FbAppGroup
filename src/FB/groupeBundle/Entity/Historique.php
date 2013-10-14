@@ -15,9 +15,9 @@ class Historique
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="integer")
+     * @ORM\Column(name="id", type="bigint")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * 
      */
     private $id;
 
@@ -31,7 +31,7 @@ class Historique
     /**
      * @var integer
      *
-     * @ORM\Column(name="id_groupe", type="integer")
+     * @ORM\Column(name="id_groupe", type="bigint")
      */
     private $idGroupe;
 
@@ -79,6 +79,18 @@ class Historique
     public function getId()
     {
         return $this->id;
+    }
+    /**
+     * Set utilisateur
+     *
+     * @param integer $utilisateur
+     * @return Historique
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    
+        return $this;
     }
 
     /**

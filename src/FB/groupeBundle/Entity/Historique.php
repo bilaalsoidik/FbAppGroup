@@ -12,28 +12,24 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Historique
 {
+    
     /**
      * @var integer
      *
-     * @ORM\Column(name="id", type="bigint")
+     * @ORM\Column(name="id_utilisateur", type="bigint")
      * @ORM\Id
-     * 
      */
-    private $id;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="utilisateur", type="integer")
-     */
-    private $utilisateur;
+    private $idUtilisateur;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="id_groupe", type="bigint")
+     * @ORM\Id
      */
     private $idGroupe;
+    
+    
 
     /**
      * @var integer
@@ -70,50 +66,33 @@ class Historique
      */
     private $dateDernierPostImportCT;
 
-
-    /**
-     * Get id
-     *
-     * @return integer 
-     */
-    public function getId()
-    {
-        return $this->id;
+function __construct($idUtilisateur, $idGroupe) {
+        $this->idUtilisateur = $idUtilisateur;
+        $this->idGroupe = $idGroupe;
     }
+    
+    
     /**
-     * Set utilisateur
+     * Set idUtilisateur
      *
-     * @param integer $utilisateur
+     * @param integer $idUtilisateur
      * @return Historique
      */
-    public function setId($id)
+    public function setIdUtilisateur($idUtilisateur)
     {
-        $this->id = $id;
+        $this->idUtilisateur = $idUtilisateur;
     
         return $this;
     }
 
     /**
-     * Set utilisateur
-     *
-     * @param integer $utilisateur
-     * @return Historique
-     */
-    public function setUtilisateur($utilisateur)
-    {
-        $this->utilisateur = $utilisateur;
-    
-        return $this;
-    }
-
-    /**
-     * Get utilisateur
+     * Get idUtilisateur
      *
      * @return integer 
      */
-    public function getUtilisateur()
+    public function getIdUtilisateur()
     {
-        return $this->utilisateur;
+        return $this->idUtilisateur;
     }
 
     /**

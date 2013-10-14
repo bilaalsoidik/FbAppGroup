@@ -17,8 +17,8 @@
                 }else{
                nomGroupe=reponse.name;
                nombreMembre=reponse.members.data.length;
-      $('<div/>',{
-       html: '<br> Vous allez recuperer les membres du groupe :&nbsp;&nbsp; <b>'+nomGroupe+'  </b> &nbsp;&nbsp; vers votre base de données. Ce groupe contient <b>'+
+      $("<div style='text-align:justify;'/>",{
+       html: '<br> Vous allez recuperer les membres du groupe :&nbsp;&nbsp; <b>'+nomGroupe+'</b> vers votre base de données. Ce groupe contient <b>'+
              nombreMembre+' membres </b>. Le nombre d\'administrateur vous le saurez une fois les membres seront tous importés ',
           
           }).dialog({

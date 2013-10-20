@@ -10,11 +10,23 @@
 html, body{
         margin: 0;
 	padding: 0;
-	height: 100%;}
+	height: 100%;
+}
 *{
     font-family: 'Helvetica Neue', Helvetica, Arial, 'lucida grande',Tahoma,Verdana,Arial,Sans-serif;
     font-size: 15px;  
     line-height:20px;
+}
+body{
+   display: block;
+   background-color: white;
+   position:relative;
+   margin:auto;
+   width: 816px;
+   /*min-height: 100%;*/
+   border-radius: 20px 20px 0px 0px;
+   margin-top: 7px; 
+   
 }
 root { 
     display: block;
@@ -22,12 +34,13 @@ root {
 #container{
    background-color: whitesmoke;
    position:relative;
-   margin:auto;
-   width: 816px;
+   margin:0px;
+   width: 100%;
    min-height: 100%;
    border-radius: 20px 20px 0px 0px;
    margin-top: 7px; 
    box-shadow: 0px 0px 14px #888888;
+ 
 }
 #baniere{
     border-radius: 20px 20px 20px 20px;
@@ -226,7 +239,7 @@ form div {
     margin-left:0px;
 }
 #fb_groupebundle_groupe_description{  
-    height: 170px;
+    height: 182px;
     
     
 }
@@ -236,3 +249,133 @@ form{
 .boutton{
     margin-top:10px;
 }
+#progress{
+    
+    width:130px;
+    height:115px;
+    box-shadow: 0px 0px 30px ;
+    position: absolute ;
+    top:24%;
+    left: 40%; z-index: 100;
+    background-color: whitesmoke;
+    border-radius: 20px 20px 20px 20px;
+    padding-left: 30px;
+    padding-top: 9px;
+    
+                                   
+}
+#progress-img{
+    
+    margin:7px;
+    width:70px;
+    height:70px;
+    display:block;
+    padding-top:0px;
+    padding:0px 10px;
+    
+                                   
+}
+#flash{
+    margin-left: auto;
+    margin-right: auto;
+    width: 720px;
+    height: 30px;
+    line-height: 30px;
+     vertical-align: middle;
+     padding: 0px;
+     
+}
+#contenudonnes{
+    line-height: 42px;
+}
+#contenudonnes li{
+    float:left;
+    list-style-type: none;
+    border-bottom:  #888888 double 5px;
+    margin-left: -12px;
+    padding: 0px;
+    
+   
+}
+#contenudonnes ul{
+    position: relative;
+    padding: 2px 2px 10px 34px;
+     
+    /* margin-left: auto; */
+     
+    /* margin-right: auto; */
+     
+    width: 720px; 
+}
+
+
+
+/*Les lignes impaire avec colone impraire*/
+#contenudonnes li:nth-child(2n+1) div:nth-child(2n+1){
+  background-color:#CFE0FA;  
+}
+/*Les lignes impaire avec colone paire*/
+#contenudonnes li:nth-child(2n+1) div:nth-child(2n){
+  background-color:#FCF9B6
+}
+/*Les lignes paire avec colone impaires*/
+#contenudonnes li:nth-child(2n) div:nth-child(2n+1){
+  background-color:#FCF9B6;
+}
+/*Les lignes paires avec colones paires*/
+#contenudonnes li:nth-child(2n) div:nth-child(2n){
+  background-color:#CFE0FA; 
+}
+
+#contenudonnes li:nth-child(2n+1) div:nth-child(2n+1):hover,
+#contenudonnes li:nth-child(2n+1) div:nth-child(2n):hover,
+#contenudonnes li:nth-child(2n) div:nth-child(2n+1):hover,
+#contenudonnes li:nth-child(2n) div:nth-child(2n):hover
+{
+  background-color:white;  
+}
+.liengp{
+    width: 250px;
+    float:left;
+    clear:both;
+    height: 35px;
+    text-align:left;
+    padding-left: 10px;
+    line-height: 35px;
+}
+.actions{
+    width: 150px;
+    display: inline;
+    float:left;
+     height: 35px;
+     text-align: center;
+     vertical-align: middle;
+     line-height: 35px;
+     
+}
+#contenudonnes li div:nth-child(2){
+    width: 160px;
+}
+.derrereModal{
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 20px 20px 0px 0px;
+        background-color: gray;
+        opacity: .50;
+        -webkit-opacity: .5;
+        -moz-opacity: .5;
+        filter: alpha(opacity=50);
+        z-index: 1000;
+    }
+ .nodisplay{
+        display: none;
+    }
+
+
+#modal-background.active, #modal-content.active {
+        display: block;
+    }

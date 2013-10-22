@@ -1,0 +1,86 @@
+<br> Vous allez recuperer les posts publié sur le groupe :&nbsp;&nbsp; 
+<label id="nomGroupe"></label> Par defaut le Graph Api classe les posts en fonction de leurs
+date de mise à jour, le dernier post commenté apparait en premier
+Toute fois on peut contourner celà en faisant une selection
+en fonction de la date de publication mais toujours en interval, 
+pas en cherchant une date exacte vu que facebook n'accepte pas la recherche selonun champs non indexé<br>
+<div> 
+    <br><Label>Mode de recuperation </label>
+<select> 
+ <option value=1>Tout importer</option>
+ <option value=2>Depuis date mise à jour </option>
+ <option value=3>Jusqu'à date mise à jour </option>
+ <option value=4>Entre deux dates mise à jour </option>
+ <option value=5>Entre deux dates de publication </option>
+ <option value=6>Depuis dates de publication </option>
+ <option value=7>Jusqu'à dates de publication </option>
+</select>      
+    <div id="action"></div>
+</div>
+<div id="vuesImportP">
+<div id='vue1'> <label> Le pas d'importation</label>
+    <input type="text" name="pas" class="text_input"  /> 
+</div>
+
+<div id='vue2'>
+<label> Depuis le </label>
+<input type="date" name="datedep" class="text_input"  /> 
+<input type="time" name="timedep" class="text_input"  /> 
+<label> Limit </label>
+<input type="text" name="limit" class="text_input"  />
+<label> Le Pas </label>
+<input type="text" name="pas" class="text_input"  />
+</div>
+
+<div id='vue3'>
+<label> Jusqu'au </label>
+<input type="date" name="datejus" class="text_input"  /> 
+<input type="time" name="timejus" class="text_input"  /> 
+<label> Limit </label>
+<input type="text" name="limit" class="text_input"  />
+<label> Le Pas </label>
+<input type="text" name="pas" class="text_input"  />
+</div>
+
+<div id='vue4'>
+<label> Depuis le </label>
+<input type="date" name="datedep" class="text_input"  /> 
+<input type="time" name="timedep" class="text_input"  /> 
+<label> Jusqu'au </label>
+<input type="date" name="datejus" class="text_input"  /> 
+<input type="time" name="timejus" class="text_input"  /> 
+<label> Le Pas </label>
+<input type="text" name="pas" class="text_input"  />   
+</div>
+
+<div id='vue5'>
+ <label> Depuis le </label>
+<input type="date" name="datedep" class="text_input"  /> 
+<input type="time" name="timedep" class="text_input"  /> 
+<label> Jusqu'au </label>
+<input type="date" name="datejus" class="text_input"  /> 
+<input type="time" name="timejus" class="text_input"  /> 
+<label> Le Pas </label>
+<input type="text" name="pas" class="text_input"  />   
+</div>
+
+<div id='vue6'>
+<label> Depuis le </label>
+<input type="date" name="datedep" class="text_input"  /> 
+<input type="time" name="timedep" class="text_input"  /> 
+<label> Limit </label>
+<input type="text" name="limit" class="text_input"  />
+<label> Le Pas </label>
+<input type="text" name="pas" class="text_input"  />
+</div>
+
+<div id='vue7'>
+<label> Jusqu'au </label>
+<input type="date" name="datejus" class="text_input"  /> 
+<input type="time" name="timejus" class="text_input"  /> 
+<label> Limit </label>
+<input type="text" name="limit" class="text_input"  />
+<label> Le Pas </label>
+<input type="text" name="pas" class="text_input"  />
+</div>
+</div>

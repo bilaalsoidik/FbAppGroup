@@ -6,10 +6,13 @@
 {% block stylesheets %}
 <link rel="stylesheet" href="{{ asset('bundles/FBgroupe/css/acceuil.css') }}" type="text/css" media="all" />
 <link href="{{asset('bundles/FBgroupe/css/Theme/jquery-ui-1.10.3.custom.css') }}" rel="stylesheet">
+<link href="{{asset('bundles/FBgroupe/css/Theme/jquery.ui.selectmenu.css') }}" rel="stylesheet">
 {% endblock %}
 <script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/jquery-1.9.1.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/jquery-ui-1.10.3.custom.js') }}"></script>
 <script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/jquery.cookie.js') }}"></script>
+<script type="text/javascript" src="{{ asset('bundles/FBgroupe/js/jquery.ui.selectmenu.js') }}"></script>
+
 {% block scripts_declaration %} 
 
 {% endblock %}
@@ -51,8 +54,15 @@
 <div id="contenu">  
 <div id="intercontenu"> 
     
-<div id="content">   
-{% block content %} {% endblock %}
+<div id="content">
+    <div  id="progress" style=" border: black double medium; visibility: hidden;">  
+<img id="progress-img"   src="{{ asset('bundles/FBgroupe/images/Progression.gif') }}"/> 
+En progression...
+</div>
+{% block content %} 
+{% endblock %}
+
+
 </div>
     </div>
         </div>

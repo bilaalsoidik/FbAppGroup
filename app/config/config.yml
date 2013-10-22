@@ -71,4 +71,4 @@ fos_facebook:
   app_id: 486996558052473
   secret: 573060401ac4899c156f4aacbc683d74
   cookie: true 
-  permissions: [email, user_groups, read_stream]
+  permissions: [email, user_groups,friends_groups, read_stream]

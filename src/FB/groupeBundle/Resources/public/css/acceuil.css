@@ -379,3 +379,38 @@ form{
 #modal-background.active, #modal-content.active {
         display: block;
     }
+div#vuesImportP{
+    visibility: hidden;    
+    }
+.c_select{
+width: 300px;
+height: 28px;
+border-radius: 0px 0px 0px 0px;
+box-shadow: 0px 0 4px #777777;
+border: 1px solid #f5f5f5;
+font-size: 15px;
+font-weight: bold;
+outline: none;  
+padding-left: 7px;
+    }
+
+option{
+        padding: 10px;
+        
+    }
+.labelImport{
+    margin: 3px;
+    width: 100px; 
+    
+    }
+.chimportPost{
+    margin: 4px;
+    width: 160px;
+    padding: 4px;
+    padding-left: 10px;
+    }
+input[name="timedep"],input[name="timejus"]{
+  margin-left:-6px;
+  width:80px;
+  padding-left: 10px;
+}

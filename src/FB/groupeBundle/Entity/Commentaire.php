@@ -43,7 +43,7 @@ class Commentaire
 
     /**
      * 
-     * @ORM\OneToOne(targetEntity="Utilisateur")
+     * @ORM\ManyToOne(targetEntity="Utilisateur")
      * @ORM\JoinColumn(name="id_commentateur", referencedColumnName="id")
      * 
      * 
@@ -81,7 +81,6 @@ class Commentaire
     public function setId($id)
     {
         $this->id = $id;
-    
         return $this;
     }
     

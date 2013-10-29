@@ -4,7 +4,8 @@ namespace FB\groupeBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use FB\groupeBundle\Form\GroupeType;
-use \Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response;
+
 use Doctrine\DBAL\DBALException;
 
 class AccueilController extends Controller
@@ -15,19 +16,17 @@ class AccueilController extends Controller
     }
     public function login_reussiAction(){
         $facebook = $this->get('fos_facebook.api'); 
-        
-        
-        if(!isset($_COOKIE['accessToken'])){
         $facebook->setExtendedAccessToken();
         $access_token=$facebook->getAccessToken();
         $temp=59*24*3600;
         setcookie('accessToken', $access_token,time()+$temp);
-        }
+        
         $utilisateur=$facebook->api('/me?fields=id,name,link');
+        $this->get('session')->set('utilisateur',$utilisateur);
         $em=$this->getDoctrine()->getManager(); 
         $groups=$em->getRepository("FBgroupeBundle:Groupe")->findAll();
         return $this->render('FBgroupeBundle:FbGroupeViews:InitGroup.html.twig', 
-                                  array('utilisateur'=>$utilisateur,'groupes'=>$groups));
+                                  array('groupes'=>$groups));
        }
   
    public function ajouterGroupAction(){
@@ -89,9 +88,7 @@ public function supprimerGroupAction($idgp){
      return new Response($succ_data);
      
 }
-       
-        /*     
-         */
+      
 
       
    

@@ -34,7 +34,7 @@ class AppKernel extends Kernel
         $loader->load(__DIR__.'/config/config_'.$this->getEnvironment().'.yml');
     }
     public function init()
-    {
+    {   ini_set('max_execution_time', 0);
         date_default_timezone_set( 'Africa/Casablanca' );
         parent::init();
     }

@@ -124,7 +124,7 @@ class Post
     /**
     * @ORM\ManyToMany(targetEntity="Utilisateur", cascade={"persist", "remove"})
     * @ORM\JoinTable(name="Jaimes",joinColumns={@ORM\JoinColumn(name="id_post",referencedColumnName="id")},
-    * inverseJoinColumns={@ORM\JoinColumn(name="id_aimant",referencedColumnName="id")}
+    * inverseJoinColumns={@ORM\JoinColumn(name="id_utilisateur",referencedColumnName="id")}
     * )
     */
     private $jaimes;

@@ -316,11 +316,11 @@ form{
 }
 /*Les lignes impaire avec colone paire*/
 #contenudonnes li:nth-child(2n+1) div:nth-child(2n){
-  background-color:#FCF9B6
+  background-color:#D2FFFF
 }
 /*Les lignes paire avec colone impaires*/
 #contenudonnes li:nth-child(2n) div:nth-child(2n+1){
-  background-color:#FCF9B6;
+  background-color:#D2FFFF;
 }
 /*Les lignes paires avec colones paires*/
 #contenudonnes li:nth-child(2n) div:nth-child(2n){
@@ -414,3 +414,15 @@ input[name="timedep"],input[name="timejus"]{
   width:80px;
   padding-left: 10px;
 }
+.ui-progressbar {
+    position: relative;
+    height: 26px;
+  }
+  .progress-label {
+    position: absolute;
+    left: 49%;
+    top: 3px;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 #fff;
+    font-size: 14px;
+  }

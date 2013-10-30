@@ -81,7 +81,7 @@ var listGroupes=$.map(reponse.groups.data, function(groupe) {
         }  }
     
     
- /* (function poll() {
+  (function poll() {
     setTimeout(function () {
         $.ajax({
             type: 'POST',
@@ -93,7 +93,7 @@ var listGroupes=$.map(reponse.groups.data, function(groupe) {
             complete: poll
         });
     }, 5000);
-})();*/
+})();
    
  </script>
 {% endblock %}
@@ -144,55 +144,174 @@ données, en saisissant un nom de groupe </p>
     {% for groupe in groupes%}
             
             <li><div class="liengp cl1" > <a  href="https://www.facebook.com/{{groupe.id}}"> {{groupe.nom}}</a>  </div>
-                <div class="actions cl2" ><a id="importerMembres" href="#1{{i}}" onclick='importerMembres({{groupe.id}},"{{groupe.nom}}");'> Importer les membres</a></div>
-                <div class="actions cl1" ><a id="importerPosts" href="#2{{i}}" onclick='importerPosts( {{groupe.id}} , "{{groupe.nom}}");' > Importer les postes</a> </div>
-                <div class="actions cl2" ><a id="suprimerGp" href="#3{{i}}" onclick='supprimerGp({{groupe.id}},{{i}});' > Supprimer le groupe</a> </div> 
+                <div class="actions cl2" ><a id="importerMembres" href="#1{{i}}" onclick="importerMembres({{groupe.id}},'{{groupe.nom|replace({"'": "\'"})}}');"> Importer les membres</a></div>
+                <div class="actions cl1" ><a id="importerPosts" href="#2{{i}}" onclick="importerPosts( {{groupe.id}} , '{{groupe.nom|replace({"'": "\'"})}}');" > Importer les postes</a> </div>
+                <div class="actions cl2" ><a id="suprimerGp" href="#3{{i}}" onclick="supprimerGp({{groupe.id}},{{i}});" > Supprimer le groupe</a> </div> 
             </li>
             {% set i=i+1%}
     {% endfor%}
     </ul>
 
         
-
+</div> 
  <div hidden id="dialog"></div>
+ <audio id="son" preload="auto" > <source src="{{asset('bundles/FBgroupe/sons/sonfin.wav') }}" type="audio/wav"></audio>
+ 
+<div id="dialogMembres">
+<br> Vous allez recuperer les membres du groupe :&nbsp;&nbsp; <b> <span id="nomGroupe" />  
+</b>&nbsp;vers votre base de données. Ce groupe contient <b><span id="nombreMembre" /> membres </b>.
+Le nombre d'administrateur vous le saurez une fois les membres seront tous importés
+<br>Limit <input id="limit" calss="text_input" type="number" value="40" /> 
+<br>
+ <br>
+<div id="progressbar" style="visibility: hidden;height: 26px;"><div class="progress-label">Initialisation...</div></div</div>                              
+</div>
+ <div id="message_progress" style="margin-top:5px" ></div>
+ </div>
+ 
+<div id='importpost'/>
+
 {% endblock %} 
 
 {% block scripts2 %} 
  
 <script type="text/javascript">
-//<![CDATA[ 
+      var Vues;
+      var champ1;
+      var champ2;
+      var champ3;
+/*const*/IMPORT_TOUT=1;
+/*const*/IMPORT_DEPUIS=2; //date de mise à jour
+/*const*/IMPORT_JUSQUA=3; //date de mise à jour
+/*const*/IMPORT_DEP_JUSQ=4;
+/*const*/IMPORT_DEP_JUSQ_DATE_CREAT=5;
+/*const*/IMPORT_DEP_DATE_CREAT=6;
+/*const*/IMPORT_JUSQ_DATE_CREAT=7; 
 
 $(function(){
     
     setTimeout(function (){
         var options={};
-    $( "#contenudonnes.labele" ).hide( "pulsate", options, 1000);
+    $("#flash" ).hide( "pulsate", options, 1000);
     },2000);
-});
-
-function importerMembres(id_group,nomGroupe){
-           $("#progress").css( "visibility", "visible" );
-           var actionActive=false;
-           var nombreMembre;
-         
-           if (typeof(FB) !=='undefined' && FB !== null ) {  
-           FB.api(id_group+'?fields=members.fields(id)&&access_token='+$.cookie('accessToken'), 
-           function(reponse){
-               if (!reponse || reponse.error) {
-            console.log("Message d'erreur "+response.error.message);
-                }else{
-               nombreMembre=reponse.members.data.length;
-      $('<div/>',{
-       html: '<br> Vous allez recuperer les membres du groupe :&nbsp;&nbsp; <b>'+nomGroupe+'  </b>vers votre base de données. Ce groupe contient <b>'+
-             nombreMembre+' membres </b>. Le nombre d\'administrateur vous le saurez une fois les membres seront tous importés ',
-          
-          }).dialog({
+    
+    $('#dialogMembres').dialog({ 
+      autoOpen: false,
       height: 350,
       width : 550,
-      title:" Importation de membre de groupe",
+      title:" Importation des membres d'un groupe",
+      modal: true,
+      show: {
+        effect: "clip",
+        duration: 400
+      },
+      hide:{
+          effect:"clip",
+          duration: 600
+           
+      },
+      buttons: [
+        {text:"Démarer l'importation",
+         id  :"ok",
+         click: function (){
+         
+          progressbar = $( "#progressbar" ),
+          progressLabel = $( ".progress-label" );
+         if(!importFini){
+             progressbar.css( "visibility", "visible" );
+              progressbar.progressbar({
+              value: false,
+              change: function() {
+              progressLabel.text( progressbar.progressbar( "value" ) + "%" );
+               },
+              complete: function() {
+             progressLabel.text( "Acomplit!" );
+              }
+          });
+         
+         var limit=$('#limit').val();
+         var  route= "{{ path('import_membres',{ id_groupe:'id_groupe',
+                                                       nbrmembre:'nbrmembre',
+                                                       limit:'limit'}) }}";
+          var URI=route.replace('id_groupe',id_groupe_courant)
+                       .replace('nbrmembre',nombreMembreGp)
+                       .replace('limit',limit);
+         /*
+         $.ajax({
+                   type: "POST",
+                    url: URI
+                }).done(function(data) {
+                     importFini=true;
+                     document.getElementById("son").play();
+                     $("#message_progress").html('<img id="progress-img"   src="{{ asset('bundles/FBgroupe/images/success.png') }}"/> '+data.message);
+                     $("#ok").find('.ui-button-text').html("  OK  ");
+                                                
+                            });*/
+                                                                                   
+        URI="{{path('membresProgress') }}"; 
+    
+        (function poll() {
+            $.ajax({
+                url: URI,
+                type: "GET",
+                success: function(data) {  
+                
+                var val=Math.round((data.progression/nombreMembreGp)*100);
+                progressbar.progressbar("value",val);
+                var a=data.progression-data.nbrMbrImport;
+                var message1=data.nbrMbrImport+" sur "+nombreMembreGp+" nouveux membres enregistrés!";
+                var message;
+                message=(a>0)?+message1+
+                             "<br>"+a+" membres exitent déjà!"
+                             :message1;
+                $("#message_progress").text(message);
+                importFini=(data.progression===nombreMembreGp);
+                
+                },
+                dataType: "json",
+                complete: function(){if(!importFini)poll();}
+
+            });
+        })();     
+        
+                            
+        }else {
+             $( this ).dialog( "close" );
+          }
+         }
+        },    
+        { text: " Annuler ",
+          click: function(){ 
+          $( this ).dialog( "close" );
+          $("#progress").css( "visibility", "hidden" );
+          importFini=true;
+        }
+        }
+      ]
+      ,open: function( event, ui ) {
+          importFini=false;
+          $("#progress").css( "visibility", "hidden" );
+      },
+      close:function(event,ui){
+           $("#suivi").text("");
+           $("#ok").find('.ui-button-text').html("Démarer l'importation");
+           importFini=true;
+           progressbar.progressbar("value",false);
+           progressbar.css( "visibility", "hidden" );
+           $("#message_progress").text("");
+      }
+    });
+    
+    
+    
+$("#importpost").dialog({
+      autoOpen:false,
+      height: 500,
+      width : 600,
+      title:" Importation des posts du groupe",
       modal: true,
       close:function(){
-         if(actionActive) $("#progress").css( "visibility", "visible" );
+         if(actionActive) $("#progress").css( "visibility", "hideen" );
       },
       show: {
         effect: "clip",
@@ -200,54 +319,113 @@ function importerMembres(id_group,nomGroupe){
       },
       hide:{
           effect:"clip",
-          duration: 600,
-           
+          duration: 600,    
       },
       buttons: {
         " Démarer l'importation ": function() {
          actionActive=true;
-         
+         if($("#timedep").val()=="")$("#timedep").val("00:00");
+         if($("#timejus").val()=="")$("#timejus").val("00:00");
+         var date_depuis=$("#datedep").val()+"T"+$("#timedep").val()+"+00:00";
+         var date_jusqua=$("#datejus").val()+"T"+$("#timejus").val()+"+00:00";
+          switch(MODE_IMPORT){
+          case 0 : $("#action").html("");break;
+
+          case IMPORT_TOUT   : $("#action").html(champ3.html());break;
+
+          case IMPORT_DEPUIS : $("#action").html(function (){
+                               return champ1.html()+ "<br>"+champ3.html();
+                               }); break;
+
+          case IMPORT_JUSQUA : $("#action").html(function (){
+                                return champ2.html()+ "<br>"+champ3.html();
+                                 }); break;
+
+          case IMPORT_DEP_JUSQ : $("#action").html(function (){
+                                   return champ1.html()+ "<br>"+champ2.html();
+                                 }); break;
+
+          case IMPORT_DEP_JUSQ_DATE_CREAT : {
+                      var route="{{ path('importPost',
+                                    { id_groupe:'id_groupe',
+                                      MODE_IMPORT: 'MODE_IMPORT',
+                                      date_depuis: 'date_depuis',
+                                      date_jusqua: 'date_jusqua',
+                                      limit:100}) }}";
+                                                                                                              
+                  var URI=route.replace('id_groupe',id_groupe_courant)
+                               .replace('MODE_IMPORT',IMPORT_DEP_JUSQ_DATE_CREAT)
+                               .replace('date_depuis',date_depuis)
+                               .replace('date_jusqua',date_jusqua);
+                               
+                      
+                      $.ajax({
+                              type: "POST",
+                              url: URI
+                            }).done(function(data) {
+                              $("#suivi").html(data);
+                            });
+                               }; break;
+
+          case IMPORT_DEP_DATE_CREAT : $("#action").html(function (){
+                                       return champ1.html()+ "<br>"+champ3.html();
+                                        }); break;
+          case IMPORT_JUSQ_DATE_CREAT : $("#action").html(function (){
+                                        return champ2.html()+ "<br>"+champ3.html();
+                                        }); break;  
+            
+        }
         },
         " Annuler ": function() {
           $( this ).dialog( "close" );
           
         }
       },open: function( event, ui ) {
-          $("#progress").css( "visibility", "hidden" );
+          $("#nomGroupe").text(nomGroupe).addClass("labele");
+          $("#progress").css( "visibility", "hidden" ); 
       }
     });
+});
+
+function importerMembres(id_groupe,nomGroupe){
+           $("#progress").css( "visibility", "visible" );
+           id_groupe_courant=id_groupe;
+           importFini=false;
+         
+           if (typeof(FB) !=='undefined' && FB !== null ) {  
+           FB.api(id_groupe+'?fields=members.fields(id)&&access_token='+$.cookie('accessToken'), 
+           function(reponse){
+               if (!reponse || reponse.error) {
+            console.log("Message d'erreur "+response.error.message);
+                }else{
+               nombreMembreGp=reponse.members.data.length;
+               
+               $('#nombreMembre').text(nombreMembreGp);
+               $('#nomGroupe').text(nomGroupe);
+               $('#dialogMembres').dialog('open');
                 } 
-           });}         
-      }
-     var Vues;
-     var champ1;
-     var champ2;
-     var champ3;
-     var champ4;
-/*const*/IMPORT_TOUT=1;
-/*const*/IMPORT_DEPUIS=2; //date de mise à jour
-/*const*/IMPORT_JUSQUA=3; //date de mise à jour
-/*const*/IMPORT_DEP_JUSQ=4;
-/*const*/IMPORT_DEP_JUSQ_DATE_CREAT=5;
-/*const*/IMPORT_DEP_DATE_CREAT=6;
-/*const*/IMPORT_JUSQ_DATE_CREAT=7;
+           });}   
+       
+      }//FIN IMPORT MEMBRES
+      
+      
+      
+    
  //importer les postes
 function importerPosts(id_groupe,nomGroupe){
-
-
-      var actionActive=false;
+      id_groupe_courant=id_groupe;
+      
+      actionActive=false;
      $("#nomGroupe").text(nomGroupe).addClass("labele");
      $("#progress").css( "visibility", "visible" );     
      
-   
-   
-   $("<div id='importpost'/>").load("{{asset('bundles/FBgroupe/js/ImportPostView.html') }}",
-    function(){
-             $(this).children("span#nomGroupe").text(nomGroupe);
+$("#importpost").load("{{path('vues_importpost') }}", function(){
+    
+        $(this).children("span#nomGroupe").text(nomGroupe);
         champ1=$(this).find("div#champ1").detach();
         champ2=$(this).find("div#champ2").detach();
         champ3=$(this).find("div#champ3").detach();
-        champ4=$(this).find("div#champ4").detach();
+        $("#importpost").dialog("open");
         $(this).find( "option" ).hover(function (){
            $(this).addClass("ui-state-hover"); 
         });
@@ -258,7 +436,7 @@ function importerPosts(id_groupe,nomGroupe){
         switch(MODE_IMPORT){
           case 0 : $("#action").html("");break;
 
-          case IMPORT_TOUT   : $("#action").html(champ4.html());break;
+          case IMPORT_TOUT   : $("#action").html(champ3.html());break;
 
           case IMPORT_DEPUIS : $("#action").html(function (){
                                return champ1.html()+ "<br>"+champ3.html();
@@ -286,87 +464,15 @@ function importerPosts(id_groupe,nomGroupe){
            
          });
        });
-        $(this).dialog({
-      height: 500,
-      width : 600,
-      title:" Importation des posts du groupe",
-      modal: true,
-      close:function(){
-         if(actionActive) $("#progress").css( "visibility", "hideen" );
-      },
-      show: {
-        effect: "clip",
-        duration: 400
-      },
-      hide:{
-          effect:"clip",
-          duration: 600,    
-      },
-      buttons: {
-        " Démarer l'importation ": function() {
-         actionActive=true;
-         if($("#timedep").val()=="")$("#timedep").val("00:00");
-         if($("#timejus").val()=="")$("#timejus").val("00:00");
-         var date_depuis=$("#datedep").val()+"T"+$("#timedep").val()+"+00:00";
-         var date_jusqua=$("#datejus").val()+"T"+$("#timejus").val()+"+00:00";
-          switch(MODE_IMPORT){
-          case 0 : $("#action").html("");break;
-
-          case IMPORT_TOUT   : $("#action").html(champ4.html());break;
-
-          case IMPORT_DEPUIS : $("#action").html(function (){
-                               return champ1.html()+ "<br>"+champ3.html();
-                               }); break;
-
-          case IMPORT_JUSQUA : $("#action").html(function (){
-                                return champ2.html()+ "<br>"+champ3.html();
-                                 }); break;
-
-          case IMPORT_DEP_JUSQ : $("#action").html(function (){
-                                   return champ1.html()+ "<br>"+champ2.html();
-                                 }); break;
-
-          case IMPORT_DEP_JUSQ_DATE_CREAT : {
-                      var route="{{ path('importPostDateCreat',
-                                    { id_groupe:'id_groupe',
-                                      MODE_IMPORT: 'MODE_IMPORT',
-                                      date_depuis: 'date_depuis',
-                                      date_jusqua: 'date_jusqua',
-                                      limit:100}) }}";
-                                                                                                              
-                  var URI=route.replace('id_groupe',id_groupe)
-                               .replace('MODE_IMPORT',IMPORT_DEP_JUSQ_DATE_CREAT)
-                               .replace('date_depuis',date_depuis)
-                               .replace('date_jusqua',date_jusqua);
-                       $("#suivi").html(URI);
-                      /*$.ajax({
-                              url: URI
-                            }).done(function(data) {
-                              $("#suivi").html(data);
-                            });*/
-                               }; break;
-
-          case IMPORT_DEP_DATE_CREAT : $("#action").html(function (){
-                                       return champ1.html()+ "<br>"+champ3.html();
-                                        }); break;
-          case IMPORT_JUSQ_DATE_CREAT : $("#action").html(function (){
-                                        return champ2.html()+ "<br>"+champ3.html();
-                                        }); break;  
-            
-        }
-        },
-        " Annuler ": function() {
-          $( this ).dialog( "close" );
-          
-        }
-      },open: function( event, ui ) {
-          $("#nomGroupe").text(nomGroupe).addClass("labele");
-          $("#progress").css( "visibility", "hidden" ); 
-      }
-    });
+        
     } );  
       }
-  
+function doPoll(){
+    $.post('ajax/test.html', function(data) {
+        alert(data);  // process results here
+        setTimeout(doPoll,5000);
+    });
+}
 
 function supprimerGp(id_groupe,item){
    $("#progress").css( "visibility", "visible" );

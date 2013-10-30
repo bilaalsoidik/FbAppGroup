@@ -58,7 +58,7 @@ class ImportDataController extends Controller {
     
     /**
      * @var Post c'est le post courant,cahangé à 
-     *                      chaque itération sur le boucle d'importation
+     *           chaque itération sur le boucle d'importation
      */
     private $new_post; 
     
@@ -87,9 +87,9 @@ class ImportDataController extends Controller {
     /**
      * Importation des membre du groupe
      * 
-     * @Route("/importmembres/({id_groupe},{nbrmembre},{lepas})", name="importMb")
+     * @Route("/importmembres/{id_groupe}&{nbrmembre}&{limit}", name="import_membres")
      */
-    public function importMembresAction($id_groupe, $nbrmembre, $lepas) {
+    public function importMembresAction($id_groupe, $nbrmembre, $limit=40) {
 
         $this->facebook = $this->get('fos_facebook.api');
         
@@ -98,7 +98,10 @@ class ImportDataController extends Controller {
         $this->groupe = ($this->manager->find("FBgroupeBundle:Groupe", $id_groupe));
 
         
-
+        $this->get('session')->set('arreter', false);
+        $this->get('session')->set('nbrAdmin', 0);
+        $this->get('session')->set('nbrImprte', 0);
+        $this->get('session')->set('progression', 0);
         if (!$this->groupe) {
             $this->get('session')->getFlashBag()->add(
                     'note', "Il y a des erreurs le groupe avec id: $id_groupe n'existe pas"
@@ -115,14 +118,14 @@ class ImportDataController extends Controller {
 
             $usr = $this->facebook->api($requete);
 
-            $this->new_usr = (new Utilisateur($id_createur_gp))
+            $this->new_usr = (new Utilisateur($usr['id']))
                                     ->setNomEntier($usr['name'])
-                                    ->setNom(($usr['last_name']) ? $usr['last_name'] : "")
-                                    ->setPrenom(($usr['first_name']) ? $usr['first_name'] : "")
-                                    ->setUsername(($usr['username']) ? $usr['username'] : "")
-                                    ->setSexe(($usr['gender'] == 'male') ? "M" : "F")
-                                    ->setEmail(($usr['email']) ? $usr['email'] : "");
-
+                                    ->setNom(isset($usr['last_name']) ? $usr['last_name'] : "")
+                                    ->setPrenom(isset($usr['first_name']) ? $usr['first_name'] : "")
+                                    ->setUsername(isset($usr['username']) ? $usr['username'] : "")
+                                    ->setSexe(isset($usr['gender']) ? (($usr['gender'] == 'male') ? "M" : "F") : "")
+                                    ->setEmail(isset($usr['email']) ? $usr['email'] : "");
+            
             try {
 
                 $this->manager->persist($this->new_usr);
@@ -151,18 +154,15 @@ class ImportDataController extends Controller {
 
         $nbrImporte = 0;
         $offset = 0;
-        $this->get('session')->set('arreter', false);
-        $this->get('session')->set('nbrAdmin', 0);
-        $this->get('session')->set('nbrImprte', $nbrImporte);
         $id_dernier_importé = "";
-
+        $progression=0;
     while (($offset <= $nbrmembre) && !$this->get('session')->get('arreter')) {
 
-        $requete = "/$id_groupe?fields=members.offset($offset).limit($lepas).fields" .
+        $requete = "/$id_groupe?fields=members.offset($offset).limit($limit).fields" .
                 "(id,name,first_name,last_name,username,gender,email,administrator)";
 
         $Resultat = $this->facebook->api($requete);
-
+        if(empty($Resultat['members']['data'])||!isset($Resultat['members']['data']))break;
 
         foreach ($Resultat['members']['data'] as &$membre) {
 
@@ -179,7 +179,7 @@ class ImportDataController extends Controller {
                                     ->setSexe(isset($membre['gender']) ? (($membre['gender'] == 'male') ? "M" : "F") : "")
                                     ->setEmail(isset($membre['email']) ? $membre['email'] : "");
 
-
+            $progression++;
                     try {
                         $this->manager->persist($this->new_usr);
                         $this->manager->flush();
@@ -192,9 +192,7 @@ class ImportDataController extends Controller {
                         
                     }
 
-
                     $membre_gpoupe = (new MembreGroupe($this->groupe, $this->new_usr))->setEstAdmin($membre['administrator']);
-
 
                     try {
                         
@@ -211,12 +209,10 @@ class ImportDataController extends Controller {
                         
                     } catch (DBALException $e) {
 
-                        
-
                             $this->container->get('doctrine')->resetManager();
                             $this->manager = $this->getDoctrine()->getManager();
                             $this->groupe = $this->manager->merge($this->groupe);
-                            $this->new_usr = $this->manager->merge($this->new_usr);
+                            $this->get('session')->set('progression', $progression);
                             
                             continue;
                     }
@@ -224,15 +220,18 @@ class ImportDataController extends Controller {
 
                     throw \Symfony\Component\HttpKernel\Exception\NotFoundHttpException(" Pas de données");
                 }
+                $this->get('session')->set('progression', $progression);
             }//END foreach
 
 
-            $offset+=$lepas;
+            $offset+=$limit;
+            
         }//END while
 
         $nbrAdmin = $this->get('session')->get("nbrAdmin");
         $nbrMbr = $this->get('session')->get("nbrImprte");
-
+        
+        if($nbrMbr!=0){
         $thisuser = $this->get('session')->get('new_usr');
 
         $HistoUser = $this->manager->find("FBgroupeBundle:Historique", 
@@ -248,24 +247,32 @@ class ImportDataController extends Controller {
             $HistoUser = new Historique($thisuser['id'], $id_groupe);
             $HistoUser->setDernierMembreImport($id_dernier_importé);
             $this->manager->persist($HistoUser);
+            $this->manager->flush();
         }
-        $this->manager->flush();
+        }
 
         $succ_data = json_encode(array('message' => 'Les membres ont été bien importés',
-            'nbrMbr' => $nbrMbr,
-            'nbrAdmin' => $nbrAdmin), JSON_FORCE_OBJECT);
-
-        $response = new Response($succ_data);
-
-        $response->headers->set('Content-Type', 'application/json');
+            'nbrMbr'      => $nbrMbr,
+            'nbrAdmin'    => $nbrAdmin,
+            'progression'=>$progression), JSON_FORCE_OBJECT);
+            $this->get('session')->remove('nbrMbr');
+            $this->get('session')->remove('nbrAdmin');
+            $this->get('session')->remove('progression');
+            
+          $response = new Response($succ_data);
+          $response->headers->set('Content-Type', 'application/json');
+        
         return $response;
     }
+    
     /**
      * 
      * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{date_depuis}&{date_jusqua}&{limit}", name="importPost")
+     * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{limit}", defaults={"MODE_IMPORT" = 1},name="importTout")
+     * 
      * Le mode d'importation nous permettra de connaitre la requete à executer et si la valeur est null pas de probleme
      */
-    public function importPostsAction($id_groupe, $MODE_IMPORT, $limit = 25,$date_depuis = null, $date_jusqua = null) {
+    public function importPostsAction($id_groupe, $MODE_IMPORT, $date_depuis = null, $date_jusqua = null,$limit = 25) {
 
         $this->manager = $this->getDoctrine()->getManager();
 
@@ -318,8 +325,8 @@ class ImportDataController extends Controller {
         else  //IMPORTATION SELON LA DATE DE MISE A JOUR  
                if(in_array($MODE_IMPORT, array(2,3,4))) {
       
-        $this->tempstime_depuis = strtotime($date_depuis);
-        $this->tempstime_jusqua = strtotime($date_jusqua);
+       if(isset($date_depuis)&&$date_depuis!='null') $this->tempstime_depuis = strtotime($date_depuis);
+       if(isset($date_jusqua)&&$date_depuis!='null') $this->tempstime_jusqua = strtotime($date_jusqua);
         
         switch ($MODE_IMPORT) {
          
@@ -351,7 +358,7 @@ class ImportDataController extends Controller {
         
         
         else    //IMPORTATION SELON LA DATE DE CREATION
-         /*==================ATTENTION!!!!===============================/**
+         /*==================!!!!!!ATTENTION!!!!=========================/**
         * L'importation selon la date de creation reconnait un bug sur   * 
         * facebook quand vous fournissez une date de creation de post que*
         * vous voulez selectioner les postes dont leurs date de creation *
@@ -398,16 +405,21 @@ class ImportDataController extends Controller {
               $id_post=$objet_post_id['post_id'];
               $requete = "/$id_post?fields=type,message,link,full_picture,".
                          "source,name,created_time,updated_time,from";
+              
               $post= $this->facebook->api($requete);
+              
               $this->importPost($post);
               
               if($this->get('session')->get('arreter'))break;
         }//fin foreach sur les id des postes
         
-        $this->get('session')->remove('nbr_post_import');
+        
             
         }
-        
+        $this->get('session')->remove('nbr_post_import');
+        $this->get('session')->remove('nbr_posts');
+        $this->get('session')->remove('nbrTotJaime');
+        $this->get('session')->remove('nbrJaimeImport');
         return new Response("Nombre de poste importé : $this->nPostImporté");
     }
     /**
@@ -595,17 +607,51 @@ class ImportDataController extends Controller {
                 }
             }              }
             }
-                      
-    return new Response("Commentaires importés :"+$this->get('session')->get("nbrCommentImport"));
+    }
+    /**
+     * 
+     * @Route("/importposts/progress", name="postsProgress")
+     * 
+     */
+    
+    public function progressPostsAction(){
+        
+        return new Response("erreur de nom");
+    }
+    /**
+     * 
+     * @Route("/importmembres/progress/{arreter}" , defaults={"arreter" = false}, name="membresProgress")
+     * 
+     */
+    
+    public function progressMembresAction($arreter){
+        
+       // if($arreter)$this->get('session')->set("arreter",true);
+        
+        $nbrAdmin = $this->get('session')->get("nbrAdmin");
+        $nbrMbrI = $this->get('session')->get("nbrImprte");
+        $progression=$this->get('session')->get('progression');
+        $data = json_encode(
+             array('message' => 'En progression...',
+                    'nbrMbrImport' => $nbrMbrI,
+                    'nbrAdmin' => $nbrAdmin,
+                     'progression'=>$progression
+                    ), JSON_FORCE_OBJECT);
+
+        $response = new Response($data);
+
+        $response->headers->set('Content-Type', 'application/json');
+        
+        return $response;
     }
     
+    
     /**
-     * @Route("/testdate/{date}")
+     * @Route("/importposts/vues", name="vues_importpost")
      */
-    public function testDateAction($date) {
-
-
-        return new Response(" temps " . strtotime($date));
+    public function sendVuesImportPostAction() {
+    
+        return $this->render('FBgroupeBundle:FbGroupeViews:VuesImportPost.html.twig');
     }
 
     /** @Route("/testdate2/{time}")

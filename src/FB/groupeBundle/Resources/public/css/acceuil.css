@@ -403,7 +403,7 @@ option{
     width: 100px; 
     
     }
-.chimportPost{
+.ch_import{
     margin: 4px;
     width: 160px;
     padding: 4px;
@@ -420,9 +420,21 @@ input[name="timedep"],input[name="timejus"]{
   }
   .progress-label {
     position: absolute;
-    left: 49%;
-    top: 3px;
+    left:42%;
+    top: 2px;
     font-weight: bold;
     text-shadow: 1px 1px 0 #fff;
-    font-size: 14px;
+    font-size: 13px;
+    
+  }
+  #message_progress,#message_progress2{
+    height: 48px;
+    vertical-align: middle;
+    
+  }
+  #success{
+      float:left;
+  }
+  #dialogMembres{
+      visibility: hidden;
   }

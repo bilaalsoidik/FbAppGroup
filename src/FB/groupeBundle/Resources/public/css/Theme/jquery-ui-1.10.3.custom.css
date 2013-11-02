@@ -812,7 +812,7 @@ body .ui-tooltip {
 }
 .ui-widget-header {
 	border: 1px solid #4297d7;
-	background: #3690f0 url(images/ui-bg_highlight-hard_75_3690f0_1x100.png) 50% 50% repeat-x;
+	background: #CDEBFC url(images/ui-bg_highlight-hard_75_3690f0_1x100.png) 50% 50% repeat-x;
 	color: #eaf5f7;
 	font-weight: bold;
 }

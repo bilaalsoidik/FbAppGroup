@@ -11,7 +11,6 @@ function get(url) {
   
 function ExecuterEncore(data){
 postMessage(data);
-console.log(data);
 ExecuterEncore(get(URL)); 
 }
 

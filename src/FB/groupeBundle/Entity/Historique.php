@@ -34,35 +34,35 @@ class Historique
     /**
      * @var integer
      *
-     * @ORM\Column(name="dernier_membre_import", type="integer")
+     * @ORM\Column(name="dernier_membre_import", type="integer",nullable=true)
      */
     private $dernierMembreImport;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="dernier_post_importe_selon_UT", type="string", length=255)
+     * @ORM\Column(name="dernier_post_importe_selon_UT", type="string", length=255,nullable=true)
      */
     private $dernierPostImporteSelonUT;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date_dernier_port_impot_UT", type="datetime")
+     * @ORM\Column(name="date_dernier_port_impot_UT", type="datetime",nullable=true)
      */
     private $dateDernierPostImpotUT;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="dernier_post_importe_selon_CT", type="string", length=255)
+     * @ORM\Column(name="dernier_post_importe_selon_CT", type="string", length=255,nullable=true)
      */
     private $dernierPostImporteSelonCT;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="date_dernier_post_import_CT", type="string", length=255)
+     * @ORM\Column(name="date_dernier_post_import_CT", type="string", length=255,nullable=true)
      */
     private $dateDernierPostImportCT;
 

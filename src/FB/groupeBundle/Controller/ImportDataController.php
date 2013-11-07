@@ -294,7 +294,7 @@ class ImportDataController extends Controller {
     
     /**
      *  
-     * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{date_depuis}&{date_jusqua}&{limit}",{"_format": "json"},name="importPost")
+     * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{date_depuis}&{date_jusqua}&{limit}", defaults={"_format": "json"}, name="importPost")
      * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{limit}", defaults={"MODE_IMPORT" = 1,"_format": "json"},name="importTout")
      * 
      * Le mode d'importation nous permettra de connaitre la requete à executer et si la valeur est null pas de probleme

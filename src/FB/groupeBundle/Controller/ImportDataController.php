@@ -292,8 +292,7 @@ class ImportDataController extends Controller {
         return $response;
     }
     
-    /**
-     *  
+    /** 
      * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{date_depuis}&{date_jusqua}&{limit}", defaults={"_format": "json"}, name="importPost")
      * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{limit}", defaults={"MODE_IMPORT" = 1,"_format": "json"},name="importTout")
      * 

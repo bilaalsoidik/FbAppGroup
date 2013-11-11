@@ -554,11 +554,11 @@ class ImportDataController extends Controller {
             $this->manager->persist($this->new_post);
             
             $this->progression++;
-            $this->progressPstPersistance->setIdPost($this->new_post->getId())
-                                                ->setNbrProgress($this->progression);
-            $this->manager->flush();
             $this->nPostImporté++;
-            $this->progressPstPersistance->setNbrPostImport($this->nPostImporté);
+            $this->progressPstPersistance->setIdPost($this->new_post->getId())
+                                                ->setNbrProgress($this->progression)
+                                                ->setNbrPostImport($this->nPostImporté);
+            $this->manager->flush();
             
             //RECUPERATION DES JAIMES
             $this->importJaimes();
@@ -573,6 +573,8 @@ class ImportDataController extends Controller {
                     $this->groupe = $this->manager->merge($this->groupe); 
                     $this->new_post = $this->manager->merge($this->new_post); 
                     $this->progressPstPersistance=$this->manager->merge($this->progressPstPersistance);
+                    $this->nPostImporté--;
+                    $this->progressPstPersistance->setNbrPostImport($this->nPostImporté);
                     $this->manager->flush();
                     }
             } 

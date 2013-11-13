@@ -13,9 +13,15 @@
                    $("#progress").css( "visibility", "visible" );
                 setTimeout(goLogIn, 500);
                 } else {
-                    window.location.href = "{{ path('f_bgroupe_accueil') }}";
+                    window.location.href = "{{ path('_security_logout') }}";
                 }
-            });       
+            });    
+            FB.Event.subscribe('auth.logout', function(response) {
+              
+                     $("#progress").css( "visibility", "visible" );
+                    window.location.href = "{{ path('_security_logout') }}";
+                
+            });
         }
     }
     
@@ -25,9 +31,10 @@
 
 {% endblock %}
 {% block content %}
-<p>Bonjour et bienvenue dans cette application facebook qui vous permet de recuperer les données d'un groupe facebook</p>
+<p>Bonjour!  Cette application facebook vous permet de recuperer les données d'un groupe facebook</p>
 
-Dans cette application vous allez pouvoir importer pour un groupe facebook: les données d'indentification, les membres avec leurs rôles, les postes publiés, les commentaires et les personnes qui ont aimé chaque poste. Veuillez vous connectez avec facebook et donner les permissions à l'application, pour pouvoir commencer<br>
+Dans cette application vous allez pouvoir importer pour un groupe facebook: les données d'indentification, les membres avec leurs rôles, les postes publiés, les commentaires et les personnes qui ont aimé chaque poste. 
+<br><strong>Veuillez vous connectez avec facebook et donner les permissions à l'application, pour pouvoir commencer </strong><br>
 
 <br>
 

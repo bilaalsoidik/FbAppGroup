@@ -1,0 +1,48 @@
+{% extends "FBgroupeBundle::layout.html.twig" %}
+{% block title "Accueil" %}
+{% block cheker_InitFB %}
+<script>
+    
+    function onFbInit() {
+       
+        if (typeof(FB) != 'undefined' && FB != null ) {              
+           FB.init();
+            FB.Event.subscribe('auth.logout', function(response) {
+              
+                $("#progress").css( "visibility", "visible" );
+                    window.location.href = "{{ path('_security_logout') }}";
+                
+            });
+        }
+    }
+    
+</script>
+{% endblock%}
+{% block autresMenus%}
+ 
+<!--Menu Groupe-->
+<a href="{{ path('_security_check') }}" title="Gestion des groupes" >
+<span id="groupes" class="menuitem" > Groupes </span></a> 
+ 
+{% endblock%}
+
+{%block connect  %}
+
+{% set utilisateur=app.session.get('utilisateur')%}
+
+<!-- Données utilisateur après sa connection -->
+<!-- Nom de l'utilisateur qui est un lien vers  sa profile facebook -->
+<a href="{{utilisateur.link}}"><span id="conn" class="menuitem">{{utilisateur.name}}</span></a>
+
+<!--Photo de profile facebook-->
+<img id="avatar" src="https://graph.facebook.com/{{utilisateur.id}}/picture" alt="photo de profile"/>  
+{% endblock %}
+
+{% block content %}
+<p><strong>Bonjour et Bienvenue !!! </strong> <br>
+Cette application facebook vous permet de recuperer les données d'un groupe facebook</p>
+Vous allez pouvoir importer pour un groupe facebook: les données d'indentification, les membres avec leurs rôles, les postes publiés, les commentaires et les personnes qui ont aimé chaque poste. <br>
+Vous vous êtes bien connecter
+<br>
+
+{% endblock %} 

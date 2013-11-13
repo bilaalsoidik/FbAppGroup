@@ -15,17 +15,21 @@
  <option value=7>Jusqu'à date publication </option>
 </select>   
 
-<br><br>
+<br>
 <div id="action">
 <div id="champ1">
 <label for="datedep" class="labele labelImport"> Depuis le </label>
-<input id="datedep" type="date" name="datedep" class="text_input chimportPost"> 
-<input id="timedep" type="time" name="timedep" class="text_input chimportPost"></div>
+<input id="datedep" type="date" name="datedep" class="text_input ch_import"> 
+<input id="timedep" type="time" name="timedep" class="text_input ch_import"></div>
 <div id="champ2"><label for="datejus" class="labele labelImport"> Jusqu'au </label>
-<input id="datejus" type="date" name="datejus" class="text_input chimportPost"> 
-<input id="timejus" type="time" name="timejus" class="text_input chimportPost"></div>
+<input id="datejus" type="date" name="datejus" class="text_input ch_import"> 
+<input id="timejus" type="time" name="timejus" class="text_input ch_import"></div>
 <div id="champ3"><label for="limit" class="labele labelImport"> Limite </label>
-<input id="limit" type="number" name="limit" class="text_input chimportPost"></div>
+<input id="limit" type="number" name="limit" class="text_input ch_import"></div>
 </div>
-<div id="suivi"></div>
+
+<div id="progressbar2" style="visibility: hidden; height: 24px;margin-top: 5px;"><center><div class="progress-label">Initialisation...</div> </center></div></div>                              
+
+<div id="message_progress2"  > </div>
+ <div id="message_final2"  ></div>
 

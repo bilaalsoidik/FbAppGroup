@@ -2,26 +2,66 @@
 
 namespace FB\groupeBundle\Controller;
 
+
+/**
+ * @author Bilal Soidik <bilalsoidik@gmail.com>
+ * @copyright (c) 2013, Bilal Soidik
+ * 
+ */
+
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use FB\groupeBundle\Form\GroupeType;
 use Symfony\Component\HttpFoundation\Response;
-
+use FOS\FacebookBundle\Facebook\FacebookSessionPersistence;
 use Doctrine\DBAL\DBALException;
 
 class AccueilController extends Controller
 {   
+    /**
+     * @var FacebookSessionPersistence C'est l'instance qui permet d'intéragir avec le serveur facebook,
+     * on le déclare privé que si on l'initialise au moins une fois 
+     * on va pouvoir l'utliser sur les méthodes privé
+     */
+    private $facebook;
+    
+    /**
+     * L'action index d'acceul si vous êtes connecté il va vous renvoyer à page
+     * d'accueil qui vous donne accès à tous les services, sinon il vous renvoie 
+     * à la page d'acceul principale.
+     */
     public function indexAction()
     {
+        
+         
+          $this->facebook = $this->get('fos_facebook.api'); 
+
+    if($this->facebook->getUser()==0) 
         return $this->render('FBgroupeBundle:Accueil:index.html.twig');
+     else
+          return $this->render('FBgroupeBundle:Accueil:indexLoged.html.twig');
+        
     }
+    
+    
     public function login_reussiAction(){
-        $facebook = $this->get('fos_facebook.api'); 
-        $facebook->setExtendedAccessToken();
-        $access_token=$facebook->getAccessToken();
-        $temp=59*24*3600;
+        $this->facebook = $this->get('fos_facebook.api');
+    
+       if($this->facebook->getUser()==0) 
+           return $this->forward ("FBgroupeBundle:Accueil:index");
+       
+        $this->facebook->setExtendedAccessToken();
+        $access_token=$this->facebook->getAccessToken();
+        $temp=56*24*3600;
         setcookie('accessToken', $access_token,time()+$temp);
         
-        $utilisateur=$facebook->api('/me?fields=id,name,link');
+   try {
+        
+            $utilisateur=$this->facebook->api('/me?fields=id,name,link');
+        
+        } catch (\FacebookApiException $e){     
+            
+             return $this->redirect($this->facebook->getLoginUrl());
+        }
         $this->get('session')->set('utilisateur',$utilisateur);
         $em=$this->getDoctrine()->getManager(); 
         $groups=$em->getRepository("FBgroupeBundle:Groupe")->findAll();
@@ -30,7 +70,10 @@ class AccueilController extends Controller
        }
   
    public function ajouterGroupAction(){
-      
+       $this->facebook = $this->get('fos_facebook.api');
+       if($this->facebook->getUser()==0) 
+           return $this->forward ("FBgroupeBundle:Accueil:index");
+       
        $formulaire=$this->createForm(new GroupeType());
        $em=$this->getDoctrine()->getManager();  
        $request=$this->getRequest();
@@ -63,6 +106,9 @@ class AccueilController extends Controller
     * 
     */
    public function getObjetAction($id , $entite){
+       $this->facebook = $this->get('fos_facebook.api');
+       if($this->facebook->getUser()==0) 
+           return $this->forward ("FBgroupeBundle:Accueil:index");
        $em=$this->getDoctrine()->getManager();
        $dept=$em->getRepository("FBgroupeBundle:"+$entite);
        $objet=$dept->find($id);
@@ -71,10 +117,11 @@ class AccueilController extends Controller
        
        return new Response($jsonObjet);
    }
-    public function  deconnecteAction(){
-        
-   }
+    
 public function supprimerGroupAction($idgp){
+    $this->facebook = $this->get('fos_facebook.api');
+       if($this->facebook->getUser()==0) 
+           return $this->forward ("FBgroupeBundle:Accueil:index");
      $em=$this->getDoctrine()->getManager();
      $gp=$em->find("FBgroupeBundle:Groupe",$idgp);
      try{
@@ -89,7 +136,25 @@ public function supprimerGroupAction($idgp){
      
 }
       
+public function deconnecteAction(){
+  
+   
+   if (isset($_SERVER['HTTP_COOKIE'])) {
+    $cookies = explode(';', $_SERVER['HTTP_COOKIE']);
+    foreach($cookies as $cookie) {
+        $parts = explode('=', $cookie);
+        $name = trim($parts[0]);
+        setcookie($name, '', time()-1000);
+        setcookie($name, '', time()-1000, '/');
+    }
+   
+}
+$this->facebook = $this->get('fos_facebook.api');
+   $this->facebook->destroySession();
+   $this->get('session')->invalidate();
+      return $this->redirect($this->generateUrl("f_bgroupe_accueil"));
 
+}
       
    
 }

@@ -22,13 +22,13 @@ use FB\groupeBundle\Entity\PersistProgressPst;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
-
+use FOS\FacebookBundle\Facebook\FacebookSessionPersistence;
 
 class ImportDataController extends Controller {
-    /**
-     * Mode d'importation des posts
+    
+     /**
+     * Importation de tous les post
      */
-  
     const IMPORT_TOUT = 1;
     const IMPORT_DEPUIS = 2; //date de mise à jour
     const IMPORT_JUSQUA = 3; //date de mise à jour
@@ -37,14 +37,20 @@ class ImportDataController extends Controller {
     const IMPORT_DEP_DATE_CREAT = 6;
     const IMPORT_JUSQ_DATE_CREAT = 7;
     
+    /**
+     * @var FacebookSessionPersistence C'est l'instance qui permet d'intéragir avec le serveur facebook,
+     * on le déclare privé que si on l'initialise au moins une fois 
+     * on va pouvoir l'utliser sur les méthodes privé
+     */
     private $facebook;
     
     /**
      * @var AbstractManagerRegistry c'est l'objet entityManager mais on utilise 
-     *                               le manager car l'entity manager est deprecié 
-     *                               dans les recentess version  
+     * le manager car l'entity manager est deprecié 
+     * dans les recentess version  
      */
     private $manager;
+    
     /**
      * @var Groupe c'est l'objet groupe courant dont on fait l'importation 
      *  
@@ -53,15 +59,16 @@ class ImportDataController extends Controller {
     
     /**
      * @var Utilisateur c'est l'utilisateur nouveau qui change à chaque 
-     *                  importation d'un membre qui a posé, aimé ou commenté
-     *                  chaque itération sur le boucle d'importation
+     * importation d'un membre qui a posé, aimé ou commenté
+     * chaque itération sur le boucle d'importation
      */
     
     private $new_usr;
     
     /**
-     * @var Post c'est le post courant,cahangé à 
-     *           chaque itération sur le boucle d'importation
+     * @var Post 
+     * c'est le post courant,cahangé à 
+     * chaque itération sur le boucle d'importation
      */
     private $new_post; 
     
@@ -76,43 +83,48 @@ class ImportDataController extends Controller {
     
     /**
      *@var integer  la date depuis laquelle on va importer les post 
-     *              il est exprimé en tempstime qui est le temps unix a compté 
-     *              depuis le 1e Janvier 1970 à minuit.
-     *              L'importation se fait depuis cette date jusqu'a une date plus proche            
+     * il est exprimé en tempstime qui est le temps unix a compté 
+     * depuis le 1e Janvier 1970 à minuit.
+     * L'importation se fait depuis cette date jusqu'a une date plus proche            
      */
     private $tempstime_depuis;
     
     /**
      *@var integer  la date juqu'a laquelle on va importer les posts 
-     *              il est exprimé en tempstime qui est le temps unix a compté 
-     *              depuis le 1e Janvier 1970 à minuit.
-     *              L'importation se fait depuis la limite ou la date depuis
-     *              jusqu'a cette date.            
+     *il est exprimé en tempstime qui est le temps unix a compté 
+     *depuis le 1e Janvier 1970 à minuit.
+     *L'importation se fait depuis la limite ou la date depuis
+     *jusqu'a cette date.            
      */
     private $tempstime_jusqua;
     
     /**
-     *@var PersistProgressionMb   l'objet qui permet le suivi en temps réel de
-     *                            la progression  de l'importation des membres  
-     *                            la session est vérouillé par le thread en cours      
+     *@var PersistProgressionMb   L'objet qui permet le suivi en temps réel de
+     *la progression  de l'importation des membres  
+     *la session est vérouillé par le thread en cours      
      */
     private $progressMbPersistance;
     
     /**
-     *@var PersistProgressPst  l'objet qui permet le suivi en temps réel de
-     *                      la progression  de l'importation des membres
-     *                      la session est vérouillé par le thread en cours        
+     *@var PersistProgressPst  L'objet qui permet le suivi en temps réel de
+     *la progression  de l'importation des membres
+     *la session est vérouillé par le thread en cours        
      */
     private $progressPstPersistance;
     /**
-     * Importation des membre du groupe
+     * @param integer $id_groupe l'id du groupe
+     * @param integer $nbrmembre nombre des membre d'un groupe 
+     * @param integer $limit la limite d'un bloc de requette
      * 
      * @Route("/importmembres/{id_groupe}&{nbrmembre}&{limit}", defaults={"_format": "json"} , name="import_membres")
      */
     public function importMembresAction($id_groupe, $nbrmembre, $limit=40) {
-
+              
         $this->facebook = $this->get('fos_facebook.api');
-        
+    
+       if($this->facebook->getUser()==0) 
+           return $this->forward ("FBgroupeBundle:Accueil:index");
+       
         $this->manager = $this->getDoctrine()->getManager();
 
         $this->groupe = $this->manager->find("FBgroupeBundle:Groupe", $id_groupe);
@@ -142,8 +154,17 @@ class ImportDataController extends Controller {
 
             $requete = "/$id_createur_gp?fields=id,name,first_name,last_name,username,gender,email,updated_time";
 
+            
+            //Il faut toujours s'assurer que le token n'est pas encore expiré au moin
+            //pour la première requette sur facebook
+       try {
+        
             $usr = $this->facebook->api($requete);
-
+        
+           } catch (\FacebookApiException $e){     
+            
+             return $this->redirect($this->facebook->getLoginUrl());
+          }
             $this->new_usr = (new Utilisateur($usr['id']))
                                     ->setNomEntier($usr['name'])
                                     ->setNom(isset($usr['last_name']) ? $usr['last_name'] : "")
@@ -300,11 +321,14 @@ class ImportDataController extends Controller {
      */
     public function importPostsAction($id_groupe, $MODE_IMPORT, $date_depuis = null, $date_jusqua = null,$limit = 25) {
 
+         $this->facebook = $this->get('fos_facebook.api');
+    
+       if($this->facebook->getUser()==0) 
+           return $this->forward ("FBgroupeBundle:Accueil:index");
+       
         $this->manager = $this->getDoctrine()->getManager();
 
         $this->groupe = ($this->manager->find("FBgroupeBundle:Groupe", $id_groupe));
-
-        $this->facebook = $this->get('fos_facebook.api');
         
         $this->progressPstPersistance=$this->manager->find("FBgroupeBundle:PersistProgressPst", $id_groupe);
          
@@ -334,8 +358,15 @@ class ImportDataController extends Controller {
                         ".fields(id,type,message,link,full_picture,source," .
                         "name,description,created_time,updated_time,from)";    
             
+           try{
+               
             $Resultat = $this->facebook->api($requete);
                     
+            
+           } catch (\FacebookApiException $e){     
+            
+             return $this->redirect($this->facebook->getLoginUrl());
+            }
             if(!isset($Resultat['feed']['data']))break;
             
             foreach($Resultat['feed']['data'] as $post){
@@ -379,8 +410,17 @@ class ImportDataController extends Controller {
                                                 "name,created_time,updated_time,from)";
                                               break;
         }       
-           $Resultat = $this->facebook->api($requete);
+           
+           try{
+               
+            $Resultat = $this->facebook->api($requete);
+                    
             
+           } catch (\FacebookApiException $e){     
+            
+             return $this->redirect($this->facebook->getLoginUrl());
+            }
+           
            $nbrTotPost=count($Resultat['feed']['data']);
            $this->progressPstPersistance->setNbrTotPost($nbrTotPost)->setNbrPostImport(0);
            $this->manager->flush();
@@ -424,12 +464,17 @@ class ImportDataController extends Controller {
                         " AND created_time<=$this->tempstime_jusqua LIMIT $limit";
                         break;
         }
-
+       try{
+           
         $lesIdPosts = $this->facebook->api(array(
             'method' => 'fql.query',
             'query' => $requetFQL
-        ));
-        
+        ));             
+            
+           } catch (\FacebookApiException $e){     
+            
+             return $this->redirect($this->facebook->getLoginUrl());
+            }
         $nbrTotPosts = count($lesIdPosts);
         $this->progressPstPersistance->setNbrTotPost($nbrTotPosts)->setNbrPostImport(0);
         $this->manager->flush();
@@ -660,6 +705,10 @@ class ImportDataController extends Controller {
      */
     
     public function progressPostsAction($id_gp){
+        $this->facebook = $this->get('fos_facebook.api');
+    
+       if($this->facebook->getUser()==0) 
+           return $this->forward ("FBgroupeBundle:Accueil:index");
         $em=$this->getDoctrine()->getManager();
         $this->progressPstPersistance=$em->find("FBgroupeBundle:PersistProgressPst", $id_gp);
           
@@ -677,6 +726,11 @@ class ImportDataController extends Controller {
      */
     
     public function progressMembresAction($id_gp){       
+        $this->facebook = $this->get('fos_facebook.api');
+    
+       if($this->facebook->getUser()==0) 
+           return $this->forward ("FBgroupeBundle:Accueil:index");
+       
         $em=$this->getDoctrine()->getManager();
         $this->progressMbPersistance=$em->find("FBgroupeBundle:PersistProgressionMb", $id_gp);
         
@@ -693,20 +747,17 @@ class ImportDataController extends Controller {
      * @Route("/importposts/vues", name="vues_importpost")
      */
     public function sendVuesImportPostAction() {
+    $this->facebook = $this->get('fos_facebook.api');
     
+       if($this->facebook->getUser()==0) 
+           return $this->forward ("FBgroupeBundle:Accueil:index");
+       
         return $this->render('FBgroupeBundle:FbGroupeViews:VuesImportPost.html.twig');
     }
 
-    /** @Route("/testdate2/{time}")
-     */
-    public function test2DateAction($time) {
-
-
-        return new Response(" date " . date("c",$time));
-    }
+    
 
     
     
 }
 
-//SELECT created_time,updated_time,post_id from stream WHERE source_id=568126449865957 AND created_time >=1380921300 ORDER BY created_time DESC

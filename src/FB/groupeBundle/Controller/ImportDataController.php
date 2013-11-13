@@ -116,7 +116,7 @@ class ImportDataController extends Controller {
      * @param integer $nbrmembre nombre des membre d'un groupe 
      * @param integer $limit la limite d'un bloc de requette
      * 
-     * @Route("/importmembres/{id_groupe}&{nbrmembre}&{limit}", defaults={"_format": "json"} , name="import_membres")
+     * @Route("/importmembres/{id_groupe}&{nbrmembre}&{limit}", name="import_membres")
      */
     public function importMembresAction($id_groupe, $nbrmembre, $limit=40) {
               
@@ -314,8 +314,8 @@ class ImportDataController extends Controller {
     }
     
     /** 
-     * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{date_depuis}&{date_jusqua}&{limit}", defaults={"_format": "json"}, name="importPost")
-     * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{limit}", defaults={"MODE_IMPORT" = 1,"_format": "json"},name="importTout")
+     * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{date_depuis}&{date_jusqua}&{limit}",  name="importPost")
+     * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{limit}", defaults={"MODE_IMPORT" = 1}, name="importTout")
      * 
      * Le mode d'importation nous permettra de connaitre la requete à executer et si la valeur est null pas de probleme
      */
@@ -507,8 +507,9 @@ class ImportDataController extends Controller {
                                             ->setNbrToJaime(0)
                                             ->setNbrJaimeImport(0);
         $this->manager->flush();
-        
-        return new Response($objetJSON);
+        $response=new Response($objetJSON);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
     /**
      * 
@@ -700,7 +701,7 @@ class ImportDataController extends Controller {
     }
     /**
      * 
-     * @Route("/importposts/progress/{id_gp}" , defaults={"_format": "json"}, name="postsProgress")
+     * @Route("/importposts/progress/{id_gp}" , name="postsProgress")
      * 
      */
     
@@ -717,11 +718,13 @@ class ImportDataController extends Controller {
 
         $serializer = new Serializer($normalizers, $encoders);
         $objetJSON=$serializer->serialize($this->progressPstPersistance, 'json');
-        return new Response($objetJSON);
+        $response=new Response($objetJSON);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
     /**
      * 
-     * @Route("/importmembres/progress/{id_gp}" , defaults={"_format": "json"}, name="membresProgress")
+     * @Route("/importmembres/progress/{id_gp}" ,  name="membresProgress")
      * 
      */
     
@@ -739,7 +742,9 @@ class ImportDataController extends Controller {
 
         $serializer = new Serializer($normalizers, $encoders);
         $objetJSON=$serializer->serialize($this->progressMbPersistance, 'json');
-        return new Response($objetJSON);
+       $response=new Response($objetJSON);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
     
     

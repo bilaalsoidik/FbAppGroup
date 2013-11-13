@@ -427,14 +427,24 @@ input[name="timedep"],input[name="timejus"]{
     font-size: 13px;
     
   }
-  #message_progress,#message_progress2{
+  #message_progress{
+     
     height: 48px;
     vertical-align: middle;
     
   }
+  #message_progress2{
+    height: 48px;
+    vertical-align: middle;
+    
+  }
+  
   #success{
       float:left;
   }
   #dialogMembres{
       visibility: hidden;
+  }
+  #action{
+    margin-top:10px;
   }

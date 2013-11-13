@@ -23,7 +23,7 @@ FB_importMb:
     
 _security_logout:
   pattern:  /logout
-  defaults: { _controller: FBgroupeBundle:ImportController:deconnecte}
+  defaults: { _controller: FBgroupeBundle:Accueil:deconnecte}
 
 f_bgroupe_getObjet: 
                pattern: /donnes/{id}&{entite}

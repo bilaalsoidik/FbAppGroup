@@ -27,14 +27,38 @@ use FOS\FacebookBundle\Facebook\FacebookSessionPersistence;
 class ImportDataController extends Controller {
     
      /**
-     * Importation de tous les post
+     *Une constante qui désigne l'mportation de tous les post
      */
     const IMPORT_TOUT = 1;
+    /**
+     *Une constante qui désigne l'mportation depuis une date donnée de mise à jour 
+     * en fonction du nombre limite de post à importer
+     */
     const IMPORT_DEPUIS = 2; //date de mise à jour
+    /**
+     *Une constante qui désigne l'mportation jusqu'a une date donnée de mise à jour
+     * en fonction du nombre limite de post à importer
+     */
     const IMPORT_JUSQUA = 3; //date de mise à jour
+    /**
+     *Une constante qui désigne l'mportation entre deux date de mise à jour 
+     * 
+     */
     const IMPORT_DEP_JUSQ = 4;
+    /**
+     *Une constante qui désigne l'mportation entre deux date de publication
+     * 
+     */
     const IMPORT_DEP_JUSQ_DATE_CREAT = 5;
+    /**
+     *Une constante qui désigne l'mportation depuis une date donnée de publication 
+     * en fonction du nombre limite de post à importer
+     */
     const IMPORT_DEP_DATE_CREAT = 6;
+    /**
+     *Une constante qui désigne l'mportation jusqu'a une date donnée de publication
+     * en fonction du nombre limite de post à importer
+     */
     const IMPORT_JUSQ_DATE_CREAT = 7;
     
     /**
@@ -76,6 +100,7 @@ class ImportDataController extends Controller {
      *@var integer Nombre designant la progression en cours une fois l'importation est fini
      */
     private $progression;
+    
     /**
      *@var integer Nombre de poste importé une fois l'importation est fini
      */
@@ -93,30 +118,35 @@ class ImportDataController extends Controller {
      *@var integer  la date juqu'a laquelle on va importer les posts 
      *il est exprimé en tempstime qui est le temps unix a compté 
      *depuis le 1e Janvier 1970 à minuit.
-     *L'importation se fait depuis la limite ou la date depuis
-     *jusqu'a cette date.            
+     * L'importation se fait depuis la limite ou la date depuis
+     * jusqu'a cette date.            
      */
     private $tempstime_jusqua;
     
     /**
-     *@var PersistProgressionMb   L'objet qui permet le suivi en temps réel de
-     *la progression  de l'importation des membres  
-     *la session est vérouillé par le thread en cours      
+     * @var PersistProgressionMb   L'objet qui permet le suivi en temps réel de
+     * la progression  de l'importation des membres  
+     * la session est vérouillé par le thread en cours      
      */
     private $progressMbPersistance;
     
     /**
-     *@var PersistProgressPst  L'objet qui permet le suivi en temps réel de
-     *la progression  de l'importation des membres
-     *la session est vérouillé par le thread en cours        
+     * @var PersistProgressPst  L'objet qui permet le suivi en temps réel de
+     * la progression  de l'importation des membres
+     * la session est vérouillé par le thread en cours        
      */
     private $progressPstPersistance;
+    
     /**
+     * L'action qui permet de récupérer les membres d'un groupe facebook vers notre base de données
+     *
      * @param integer $id_groupe l'id du groupe
      * @param integer $nbrmembre nombre des membre d'un groupe 
      * @param integer $limit la limite d'un bloc de requette
      * 
      * @Route("/importmembres/{id_groupe}&{nbrmembre}&{limit}", name="import_membres")
+     *
+     *@return Response
      */
     public function importMembresAction($id_groupe, $nbrmembre, $limit=40) {
               
@@ -314,10 +344,21 @@ class ImportDataController extends Controller {
     }
     
     /** 
+     *L'action qui permet de récupérer les postes vers notre base données selon différents type de mode 'importation
+     *Le mode d'importation nous permettra de connaitre la requete à executer
+     *
+     *
      * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{date_depuis}&{date_jusqua}&{limit}",  name="importPost")
      * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{limit}", defaults={"MODE_IMPORT" = 1}, name="importTout")
      * 
-     * Le mode d'importation nous permettra de connaitre la requete à executer et si la valeur est null pas de probleme
+     * @param integer $id_groupe l'id du groupe
+     * @param string $date_depuis une date antérieur vers des posts à date postérieur , un string au format date 
+     * @param string $date_jusqua une date postérieur vers des posts à date antérieur , un string au format date 
+     * @param integer $limit la limite d'un bloc de requette
+     * @param const $MODE_IMPORT Mode d'importation de post
+     *
+     * @return PersistProgressPst au format json
+     * 
      */
     public function importPostsAction($id_groupe, $MODE_IMPORT, $date_depuis = null, $date_jusqua = null,$limit = 25) {
 
@@ -383,7 +424,7 @@ class ImportDataController extends Controller {
             
         };//FIN WHILE
             
-        }
+        }//FIN SI MODE_IMPORT=1
         
         else  //IMPORTATION SELON LA DATE DE MISE A JOUR  
                if(in_array($MODE_IMPORT, array(2,3,4))) {
@@ -430,17 +471,22 @@ class ImportDataController extends Controller {
                 $this->importPost($post);
                 
             }
-        } 
+        } //FIN SI in_array($MODE_IMPORT, array(2,3,4))
         
         
-        else    //IMPORTATION SELON LA DATE DE CREATION
-         /*==================!!!!!!ATTENTION!!!!=========================/**
-        * L'importation selon la date de creation reconnait un bug sur   * 
-        * facebook quand vous fournissez une date de creation de post que*
-        * vous voulez selectioner les postes dont leurs date de creation *
-        * sont inférieus ou supérieus alors si la date de mise à jour de *
-        * ne l'est pas ne sera pas sélectioné.                           *
-        *================================================================*/       
+        else   
+        
+                //IMPORTATION SELON LA DATE DE CREATION
+       /**==================!!!!!!ATTENTION!!!!=========================/**
+        *  																																																								 *
+        *  L'importation selon la date de creation reconnait un bug sur   * 
+        *  facebook quand vous fournissez une date de creation de post que*
+        *  vous voulez selectioner les postes dont leurs date de creation *
+        *  sont inférieus ou supérieus alors si la date de mise à jour de *
+        *  ne l'est pas ne sera pas sélectioné.                           *
+        *                                                                 *
+        *=================================================================*/   
+            
             if(in_array($MODE_IMPORT, array(5,6,7))){
 
         $this->tempstime_depuis = strtotime($date_depuis);
@@ -511,10 +557,14 @@ class ImportDataController extends Controller {
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
-    /**
+    
+    /** 
+     * Cette méthode cherche un utilisateur dans la base donnée avec son id, s'il ne le trouve pas il le crée 
+     * en récupérant ses information de facebook
      * 
-     * @param id_utilisateur
-     * 
+     * @param bigint id_utilisateur
+     * @return Utilisateur 
+     *
      */
     private function findOuCreatMembre($id_utilisateur) {
         
@@ -561,9 +611,11 @@ class ImportDataController extends Controller {
     }
     
     /**
+     * Cette méthode récupère un enregistrement dans un tableau représentant un post provenant de facebook
+     * et l'enregistre dans la base de données, elle accède au propretés privés du contrôleur
+     * @param array(stream) $post une ligne d'enregistrement d'un post récupéré depuis facebook
      * 
-     * @param array $post une ligne d'enregistrement d'un postrecuperé depuis facebook
-     * 
+     *@return void
      */
     private function importPost($post){
         
@@ -628,8 +680,12 @@ class ImportDataController extends Controller {
        $this->importCommentaires();
     }
 
-    //A Appeler àprès l'intialisation d'un post
-    //il accède au valiable du controlleur
+    /**
+     * A appeler àprès l'intialisation d'un post
+     * Cette méthode accède au proprietés privés du controlleur
+     *
+     * @return void
+     */
     private function importJaimes(){
         
             $requete = "/". $this->new_post->getId()."?fields=likes.limit(5000).fields(id)";
@@ -650,8 +706,12 @@ class ImportDataController extends Controller {
             }     $this->progressPstPersistance->setNbrJaimeImport(0);  
     }
     
-    //A Appeler àprès l'intialisation d'un post et importation des commentaires
-    //il accède au valiable du controlleur
+   /** 
+    * A appeler àprès l'intialisation d'un post et importation des commentaires
+    * Cette méthode accède au proprietés privés du controlleur
+    * 
+    * @return void
+    */
     private function importCommentaires(){
         
             $requete = "/".$this->new_post->getId()."?fields=comments.limit(5000).fields(id,message,like_count,created_time,from)";
@@ -700,9 +760,14 @@ class ImportDataController extends Controller {
             }$this->progressPstPersistance->setNbrTotComment(0);
     }
     /**
-     * 
+     * Cette méthode nous pertmet de suivre la progression de l'importation des posts
+     * A chaque ajout on persiste un objet de PersistProgressPst
+     *
      * @Route("/importposts/progress/{id_gp}" , name="postsProgress")
      * 
+     *
+     * @param long $id_gp l'id du groupe
+     * @return Response PersistProgressPst au formatat JSON
      */
     
     public function progressPostsAction($id_gp){
@@ -723,9 +788,15 @@ class ImportDataController extends Controller {
         return $response;
     }
     /**
-     * 
+     * Cette méthode nous permet de suivre la progression de l'importation des membres
+     * A chaque ajout on persiste un objet de PersistProgressionMb
+     *
      * @Route("/importmembres/progress/{id_gp}" ,  name="membresProgress")
      * 
+     * 
+     * @param long $id_gp l'id du groupe
+     *
+     * @return Response PersistProgressionMb au formatat JSON
      */
     
     public function progressMembresAction($id_gp){       
@@ -749,8 +820,13 @@ class ImportDataController extends Controller {
     
     
     /**
+     * Cette méthode nous permet d'importer le formulaire d'importation de groupe
+     *
      * @Route("/importposts/vues", name="vues_importpost")
+     *
+     *@return Response une vue twig contenant un formaulaire
      */
+    
     public function sendVuesImportPostAction() {
     $this->facebook = $this->get('fos_facebook.api');
     

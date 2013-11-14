@@ -66,8 +66,9 @@ swiftmailer:
     username:  %mailer_user%
     password:  %mailer_password%
     spool:     { type: memory }
+    
 fos_facebook:
-  alias:  facebook
+  alias :  facebook
   app_id: 486996558052473
   secret: 573060401ac4899c156f4aacbc683d74
   cookie: true 

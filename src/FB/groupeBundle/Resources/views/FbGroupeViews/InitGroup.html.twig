@@ -3,15 +3,33 @@
 
 {% block scripts_declaration %} 
 <script type="text/javascript"> 
+ function onFbInit() {
+       if (typeof(FB) !=='undefined' && FB !== null )
+       FB.Event.subscribe('auth.statusChange', function(response) {
+           if (response.session || response.authResponse){
+       
+       InialiserRechGroupe();             
+       FB.Event.subscribe('auth.logout', function(response2) {
+              
+                     $("#progress").css( "visibility", "visible" );
+                    window.location.href = "{{ path('_security_logout') }}"; 
+            }); 
+            }
+            });
+            
+    }
     
 var GroupeChoisit;
-   function InialiserRechGroupe(){
+function InialiserRechGroupe(){
       //Recuperation de la liste des groupes à partir de facebook
-FB.api('me?fields=groups.fields(name,id,icon,email,privacy,description)&&access_token='+$.cookie('accessToken'),function(reponse){ 
+FB.api("/me?fields=groups.fields(name,id,icon,email,privacy,description)"+
+        "&&access_token="+$.cookie('accessToken'),function(reponse){ 
       if (!reponse || reponse.error) {
        console.log("Message d'erreur "+reponse.error.message);}
+   else{
+       var tableaugroupes = reponse.groups.data ;
         //On normalise les données pour que l'autocompleteur les reconnaisse car il a besoin de label et de value
-var listGroupes=$.map(reponse.groups.data, function(groupe) {
+var listGroupes=$.map(tableaugroupes, function(groupe) {
                 return {
                 label         : groupe.name,//Nom du groupe
                 value         : groupe.id,  //Id du groupe
@@ -20,8 +38,8 @@ var listGroupes=$.map(reponse.groups.data, function(groupe) {
                 privacy       : groupe.privacy,
                 description   : groupe.description  };});
                                    
-     initAutoComlete(listGroupes); 
-;});
+     initAutoComlete(listGroupes); }
+});
  
   
  
@@ -54,7 +72,6 @@ var listGroupes=$.map(reponse.groups.data, function(groupe) {
       title:   " Enregistrement de groupe",
       modal:    true,
       close:function(){
-          $("#progress").css( "visibility", "visible" );
       },
       show:    {
                effect: "clip",
@@ -67,9 +84,11 @@ var listGroupes=$.map(reponse.groups.data, function(groupe) {
                $( "form" ).submit();
                actionEnrg=true;
                $( this ).dialog( "close" );
+               $("#progress").css( "visibility", "visible" );
                },
                " Annuler ": function() {
                $( this ).dialog( "close" );
+               $("#progress").css( "visibility", "hidden" );
                  } } });    });
       return false;
                }})
@@ -80,37 +99,7 @@ var listGroupes=$.map(reponse.groups.data, function(groupe) {
               "<div style=' padding-left:56px;  position: relative;  '> Id  groupe : "+ item.value +" </div></div></a>")
       .appendTo(ul); };       };
         
-   function onFbInit() {
-        if (typeof(FB) !=='undefined' && FB !== null ) {   
-           InialiserRechGroupe();   
-           FB.init();
-           FB.Event.subscribe('auth.logout', function(response) {
-              
-                     $("#progress").css( "visibility", "visible" );
-                    window.location.href = "{{ path('_security_logout') }}";
-                
-            });
-           
-        }  
-    
-   
-    }
-    
-    
-  (function poll() {
-    setTimeout(function () {
-        $.ajax({
-            type: 'POST',
-            dataType: 'json',
-            url: 'http://somewhere.com/rest/123',
-            success: function (data) {
-                MyNamespace.myFunction(data); //DO ANY PROCESS HERE
-            },
-            complete: poll
-        });
-    }, 5000);
-})();
-   
+  
  </script>
 {% endblock %}
  
@@ -167,8 +156,8 @@ données, en saisissant un nom de groupe </p>
             {% set i=i+1%}
     {% endfor%}
     </ul>
-
-        
+ 
+         
 </div> 
  <div hidden id="dialog"></div>
  <audio id="son" preload="auto" > <source src="{{asset('bundles/FBgroupe/sons/success.wav') }}" type="audio/wav"></audio>
@@ -194,6 +183,7 @@ Le nombre d'administrateur vous le saurez une fois les membres seront tous impor
 {% block scripts2 %} 
  
 <script type="text/javascript">
+    
 var      Vues;
 var      champ1;
 var      champ2;
@@ -212,9 +202,6 @@ $(function(){
         var options={};
     $("#flash" ).hide( "pulsate", options, 1000);
     },2000);
-    
-    
-
     $(".progress-label" ).css("left","42%");
     
     $('#dialogMembres').dialog({ 

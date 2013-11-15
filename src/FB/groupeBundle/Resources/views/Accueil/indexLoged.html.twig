@@ -5,15 +5,16 @@
     
     function onFbInit() {
        
-        if (typeof(FB) != 'undefined' && FB != null ) {              
-           FB.init();
-            FB.Event.subscribe('auth.logout', function(response) {
+       if (typeof(FB) !=='undefined' && FB !== null )
+       FB.Event.subscribe('auth.statusChange', function(response) {
+                 if (response.session || response.authResponse){
+       FB.Event.subscribe('auth.logout', function(response2) {
               
-                $("#progress").css( "visibility", "visible" );
-                    window.location.href = "{{ path('_security_logout') }}";
-                
+                     $("#progress").css( "visibility", "visible" );
+                    window.location.href = "{{ path('_security_logout') }}"; 
+            }); 
+            }
             });
-        }
     }
     
 </script>

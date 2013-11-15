@@ -182,7 +182,7 @@ class ImportDataController extends Controller {
 
         if (isset($id_createur_gp)) {
 
-            $requete = "/$id_createur_gp?fields=id,name,first_name,last_name,username,gender,email,updated_time";
+            $requete = "/$id_createur_gp?fields=id,name,first_name,last_name,username,gender,email";
 
             
             //Il faut toujours s'assurer que le token n'est pas encore expiré au moin
@@ -838,7 +838,9 @@ class ImportDataController extends Controller {
 
     
 
-    
+    public function TestACT(){
+        
+    }
     
 }
 

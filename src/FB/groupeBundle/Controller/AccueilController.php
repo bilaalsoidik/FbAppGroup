@@ -26,7 +26,7 @@ class AccueilController extends Controller
     {
         
          
-          $facebook = $this->get('fos_facebook.api'); 
+            $facebook = $this->get('fos_facebook.api'); 
 
     if($facebook->getUser()==0) 
         return $this->render('FBgroupeBundle:Accueil:index.html.twig');
@@ -41,9 +41,11 @@ class AccueilController extends Controller
     
        if($facebook->getUser()==0) 
            return $this->forward ("FBgroupeBundle:Accueil:index");
-       
+  
         $facebook->setExtendedAccessToken();
+          
         $access_token=$facebook->getAccessToken();
+       
         $temp=56*24*3600;
         setcookie('accessToken', $access_token,time()+$temp);
         

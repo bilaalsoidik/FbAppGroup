@@ -771,10 +771,7 @@ class ImportDataController extends Controller {
      */
     
     public function progressPostsAction($id_gp){
-        $this->facebook = $this->get('fos_facebook.api');
-    
-       if($this->facebook->getUser()==0) 
-           return $this->forward ("FBgroupeBundle:Accueil:index");
+     
         $em=$this->getDoctrine()->getManager();
         $this->progressPstPersistance=$em->find("FBgroupeBundle:PersistProgressPst", $id_gp);
           
@@ -800,10 +797,7 @@ class ImportDataController extends Controller {
      */
     
     public function progressMembresAction($id_gp){       
-        $this->facebook = $this->get('fos_facebook.api');
-    
-       if($this->facebook->getUser()==0) 
-           return $this->forward ("FBgroupeBundle:Accueil:index");
+        
        
         $em=$this->getDoctrine()->getManager();
         $this->progressMbPersistance=$em->find("FBgroupeBundle:PersistProgressionMb", $id_gp);

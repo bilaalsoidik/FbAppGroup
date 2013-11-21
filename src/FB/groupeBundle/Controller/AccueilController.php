@@ -27,8 +27,8 @@ class AccueilController extends Controller
         
          
             $facebook = $this->get('fos_facebook.api'); 
-
-    if($facebook->getUser()==0) 
+            $user=$this->get('session')->get('utilisateur');
+    if($facebook->getUser()==0||!isset($user)) 
         return $this->render('FBgroupeBundle:Accueil:index.html.twig');
      else
           return $this->render('FBgroupeBundle:Accueil:indexLoged.html.twig');

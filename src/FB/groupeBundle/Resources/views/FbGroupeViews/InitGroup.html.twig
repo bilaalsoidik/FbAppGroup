@@ -417,7 +417,7 @@ $(function(){
                                                    MODE_IMPORT: 'MODE_IMPORT',
                                                    limit:'25'}) }}";
                                         
-          var limit=$("#limit").val();
+          var limit=$("#limitPposts").val();
           
          var URL=route1.replace('id_groupe',id_groupe_courant)
                        .replace('MODE_IMPORT',IMPORT_TOUT)
@@ -457,8 +457,8 @@ $(function(){
          else date_depuis=$("#datedep").val()+"T"+$("#timedep").val()+"+00:00";
          if($("#datejus").val()==="")date_jusqua="null";
          else date_jusqua=$("#datejus").val()+"T"+$("#timejus").val()+"+00:00";
-         var limit=$("#limit").val();
-         
+         var limit=$("#limitPposts").val();
+         alert(limit);
          var URL=route2.replace('id_groupe',id_groupe_courant)
                        .replace('MODE_IMPORT',MODE_IMPORT)
                        .replace('date_depuis',date_depuis)

@@ -345,7 +345,7 @@ $(function(){
                     
                 if(MODE_IMPORT===1){
                   message1="<span class='labele'>"+data.nbrPostImport+"</span> posts recupérés et enregistrés!";
-                  progressLabel.text( "En progression ..." ).css("left","42%");
+                  progressLabel2.text( "En progression ..." ).css("left","42%");
                 
                 }else{
                 var val=Math.round((progress/nbrTotPost)*100);
@@ -356,7 +356,7 @@ $(function(){
                   message1="<span class='labele'>"+data.nbrPostImport+"</span> sur <span class='labele'>"+
                               nbrTotPost+"</span> posts recupérés et enregistrés!";
              
-                progressLabel.css("left","48%");
+                progressLabel2.css("left","48%");
                 }
                 var a=progress-data.nbrPostImport;
                 var message=(a>0)? message1+
@@ -379,7 +379,7 @@ $(function(){
            progressbar2.progressbar("value",false);
            progressbar2.css( "visibility", "hidden" );
           
-          progressLabel.text("Initialisation...");
+          progressLabel2.text("Initialisation...");
       },
       show: {
         effect: "clip",
@@ -394,7 +394,7 @@ $(function(){
           id  :"ok2",
          click: function (){ 
           progressbar2 = $( "#progressbar2" ),
-          progressLabel = $( ".progress-label" );
+          progressLabel2 = $( ".progress-label2" );
   
          if(!importFini){
               progressbar2.css( "visibility", "visible" );
@@ -402,10 +402,10 @@ $(function(){
               value: false,
               max:100,
               change: function() {
-              progressLabel.text( progressbar2.progressbar( "value" ) + "%" );
+              progressLabel2.text( progressbar2.progressbar( "value" ) + "%" );
                },
               complete: function() {
-              progressLabel.text( "Accomplit !" ).css("left","42%");
+              progressLabel2.text( "Accomplit !" ).css("left","42%");
               }
           }); 
           
@@ -501,6 +501,7 @@ $(function(){
           $("#progress").css( "visibility", "hidden" );
           $("#message_progress").html("");
           importFini=true;
+          
         }
         }
       ] 

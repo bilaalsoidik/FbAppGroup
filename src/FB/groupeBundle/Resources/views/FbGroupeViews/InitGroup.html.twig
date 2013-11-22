@@ -160,7 +160,7 @@ données, en saisissant un nom de groupe </p>
          
 </div> 
  <div hidden id="dialog"></div>
- <audio id="son" preload="auto" > <source src="{{asset('bundles/FBgroupe/sons/success.wav') }}" type="audio/wav"></audio>
+ <audio id="son" preload="auto" > <source src="{{asset('bundles/FBgroupe/sons/successful.mp3') }}" type="audio/wav"></audio>
  
 <div id="dialogMembres">
 <br> Vous allez recuperer les membres du groupe :&nbsp;&nbsp; <b> <span id="nomGroupe" />  
@@ -415,13 +415,13 @@ $(function(){
  
            var route1="{{ path('importTout',{ id_groupe:'id_groupe',
                                                    MODE_IMPORT: 'MODE_IMPORT',
-                                                   limit:5000}) }}";
+                                                   limit:'25'}) }}";
                                         
           var limit=$("#limit").val();
           
          var URL=route1.replace('id_groupe',id_groupe_courant)
                        .replace('MODE_IMPORT',IMPORT_TOUT)
-                       .replace('5000',limit);
+                       .replace(25,limit);
          $.ajax({
                    type: "POST",
                     url: URL
@@ -447,7 +447,7 @@ $(function(){
                                                   MODE_IMPORT: 'MODE_IMPORT',
                                                   date_depuis: 'date_depuis',
                                                   date_jusqua: 'date_jusqua',
-                                                  limit:5000})  }}";
+                                                  limit:'25'})  }}";
                                     
          var date_depuis;
          var date_jusqua;
@@ -463,7 +463,7 @@ $(function(){
                        .replace('MODE_IMPORT',MODE_IMPORT)
                        .replace('date_depuis',date_depuis)
                        .replace('date_jusqua',date_jusqua)
-                       .replace('5000',limit);
+                       .replace('25',limit);
          
          $.ajax({
                    type: "POST",

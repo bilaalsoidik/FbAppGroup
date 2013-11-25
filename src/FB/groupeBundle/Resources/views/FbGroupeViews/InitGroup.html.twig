@@ -393,8 +393,8 @@ $(function(){
         { text:"Démarer l'importation",
           id  :"ok2",
          click: function (){ 
-          progressbar2 = $( "#progressbar2" ),
-          progressLabel2 = $( ".progress-label2" );
+          //progressbar2 = $( "#progressbar2" ),
+         // progressLabel2 = $( ".progress-label2" );
   
          if(!importFini){
               progressbar2.css( "visibility", "visible" );
@@ -413,7 +413,7 @@ $(function(){
              
          if(MODE_IMPORT===IMPORT_TOUT){
  
-           var route1="{{ path('importTout',{ id_groupe:'id_groupe',
+           route1="{{ path('importTout',{ id_groupe:'id_groupe',
                                                    MODE_IMPORT: 'MODE_IMPORT',
                                                    limit:'25'}) }}";
                                         
@@ -421,7 +421,7 @@ $(function(){
           
          var URL=route1.replace('id_groupe',id_groupe_courant)
                        .replace('MODE_IMPORT',IMPORT_TOUT)
-                       .replace(25,limit);
+                       .replace('25',limit);
          $.ajax({
                    type: "POST",
                     url: URL
@@ -443,7 +443,7 @@ $(function(){
          if(MODE_IMPORT>=2&&MODE_IMPORT<=7){
          
          //Les valeurs fournis sont à remplacer avec les vrais valeurs
-         var route2="{{ path('importPost',{  id_groupe:   'id_groupe',
+         route2="{{ path('importPost',{  id_groupe:   'id_groupe',
                                                   MODE_IMPORT: 'MODE_IMPORT',
                                                   date_depuis: 'date_depuis',
                                                   date_jusqua: 'date_jusqua',
@@ -458,8 +458,8 @@ $(function(){
          if($("#datejus").val()==="")date_jusqua="null";
          else date_jusqua=$("#datejus").val()+"T"+$("#timejus").val()+"+00:00";
          var limit=$("#limitPposts").val();
-         alert(limit);
-         var URL=route2.replace('id_groupe',id_groupe_courant)
+         
+         var URL2=route2.replace('id_groupe',id_groupe_courant)
                        .replace('MODE_IMPORT',MODE_IMPORT)
                        .replace('date_depuis',date_depuis)
                        .replace('date_jusqua',date_jusqua)
@@ -467,7 +467,13 @@ $(function(){
          
          $.ajax({
                    type: "POST",
-                    url: URL
+                    url: URL2,
+                    error: function(x, e) {
+                  if (x.status == 500) {
+                      progressbar2.css( "visibility", "hidden" );
+                  
+                   alert('Votre demande est mal formulé');
+                  }}
                 }).done(function(data){ 
                 // {idGroupe,nbrTotPost,idPost,nbrToJaime,nbrJaimeImport,nbrTotComment,nbrComImport,nbrPostImport,nbrProgress}
                      importFini=true;
@@ -485,9 +491,9 @@ $(function(){
          }
           
         //SUIVI DE LA PROGRESSION
-        var URL2="{{path('postsProgress',{id_gp:'id_groupe'}) }}"; 
-        URL2=URL2.replace("id_groupe",id_groupe_courant);
-        ThreadProgressPost.postMessage(URL2);
+        var URL3="{{path('postsProgress',{id_gp:'id_groupe'}) }}"; 
+        URL3=URL3.replace("id_groupe",id_groupe_courant);
+        ThreadProgressPost.postMessage(URL3);
                            
         }else 
         {
@@ -552,6 +558,27 @@ function importerPosts(id_groupe,nomGroupe){
            $(this).addClass("ui-state-hover"); 
         });
        $(this).find("select").change( function (){
+           importFini=false;
+           $("#ok2").find('.ui-button-text').html("Demarrer l'importation"); 
+          progressbar2 = $( "#progressbar2" );
+          progressbar2.progressbar({
+              value: false,
+              max:100,
+              change: function() {
+              progressLabel2.text( progressbar2.progressbar( "value" ) + "%" );
+               },
+              complete: function() {
+              progressLabel2.text( "Accomplit !" ).css("left","42%");
+              }
+          });
+          progressbar2.progressbar("value",false);
+          progressLabel2 = $( ".progress-label2" );
+            $("#message_progress2").html("");
+            $("#message_final2").html("");
+            
+            progressbar2.css( "visibility", "hidden" );
+            progressLabel2.text("Initialisation...");
+        
            $("select option:selected").each(function() {
                MODE_IMPORT=parseInt($( this ).val());
                

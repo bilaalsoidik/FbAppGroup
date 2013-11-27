@@ -10,12 +10,16 @@
         if (typeof(FB) != 'undefined' && FB != null ) {              
             FB.Event.subscribe('auth.statusChange', function(response) {
                 if (response.session || response.authResponse) {
+               
                    $("#progress").css( "visibility", "visible" );
                 setTimeout(goLogIn, 500);
                 } else {
+                    
+                alert("ggggggggggggggg");
                     window.location.href = "{{ path('_security_logout') }}";
                 }
             });    
+            
             FB.Event.subscribe('auth.logout', function(response) {
               
                      $("#progress").css( "visibility", "visible" );

@@ -20,10 +20,7 @@
         "sensio/generator-bundle": "2.3.*",
         "incenteev/composer-parameter-handler": "~2.0",
         "friendsofsymfony/facebook-bundle": "1.2.*",
-        "cboden/Ratchet": "0.3.*",
-        "symfony/process": "v2.3.7"
-        
-        
+        "symfony/serializer": "2.4.*@dev"
     },
     "scripts": {
         "post-install-cmd": [

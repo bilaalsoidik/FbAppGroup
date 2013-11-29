@@ -73,24 +73,27 @@ class WsImportProgress implements MessageComponentInterface {
     
     public function onOpen(ConnectionInterface $conn) {
         // Garder le message pour envoyer les message apr_s
-        $this->clients->attach($conn);
+        $this->clients->attach($conn,$this->clients->getHash($conn));
 
         echo "Nouvelle connexion ! ($conn->resourceId)\n";      
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {
-        $this->nbC++;
+        
     /**   Je normalise mes messages comme ceci pour que je les traite
         *  $msg="{
         *         "code":CONST_CODE,
         *         "donnee":{ }
         *          }"
         */
-      
-        echo "nombre de post mesaage $this->nbC \n";
+      echo "Rcepetion de la part de $from->resourceId \n";
+
       $objMsg=  json_decode($msg);
       
-    echo "Rcepetion de la part de $from->resourceId et Traitement du message: \n $msg \n";
+     if (isset($objMsg)) {
+
+         if($objMsg->code!=COMMUNIC_INTER_SERV){
+     
 
         if((!isset($this->connAccepted[$from->resourceId]))||!$this->clients->contains($from)){
         
@@ -98,14 +101,42 @@ class WsImportProgress implements MessageComponentInterface {
             
         }
      
-    if (isset($objMsg)) {
+    
             switch ($objMsg->code) {
 
                 case self::PROGRESS_MEMBRES : $this->progressMembres($objMsg->donnee->id_groupe, $from);
                     break;
                 case self::PROGRESS_POSTS : $this->progressPostes($objMsg->donnee->id_groupe, $from);
             }
-        }
+     }
+     else { //Traitement des requêtes internes sur le serveur
+       /*  $msg="{
+        *         "code":CONST_CODE,
+        *         "donnee":{ "hashClient":""
+        *                    "data"      : "formatjsont"}
+        *          }"
+        */
+         if(isset($objMsg->donnee->hashClient)){
+         
+        $clientCible=null;
+        $this->clients->rewind();
+        
+        while($this->clients->valid()){
+           
+         if($this->clients->getHash($this->clients->current())){
+             $clientCible=$this->clients->current();
+         }
+         $this->clients->next();
+         }
+         
+         if ($clientCible != null) {
+                        $clientCible->send($objMsg->donnee->data);
+                    }
+                }
+         
+            }
+     
+            }
     } 
 
     public function onClose(ConnectionInterface $conn) {
@@ -176,7 +207,9 @@ private function progressPostes($id_groupe,ConnectionInterface &$conn){
                 
       echo "Voici la reponse \n$reponse \r\n\r\n";
       $this->connAccepted[$from->resourceId]=true;
-      $from->send($reponse);
+      $hashClient=$this->clients->getHash($from);
+      
+      $from->send($reponse."#$hashClient#\r\n");
       
       echo "Etablissement de la connextion avec $from->resourceId \n";
       
@@ -219,7 +252,7 @@ private function progressPostes($id_groupe,ConnectionInterface &$conn){
 		$handshakeToken = base64_encode($rawToken) . "\r\n";
          *          */
     /*
- php "C:\Program Files\EasyPHP-DevServer-13.1VC9\data\localweb\FbAppGroup\webSockets\webSocketSrv.php"
+  
  */
     
 }

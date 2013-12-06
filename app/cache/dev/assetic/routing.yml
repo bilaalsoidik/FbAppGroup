@@ -1,0 +1,5 @@
+_assetic:
+    resource: .
+    type: assetic
+_app:
+    resource: 'C:/Program Files/EasyPHP-DevServer-13.1VC9/data/localweb/FbAppGroup/app/config/routing_dev.yml'

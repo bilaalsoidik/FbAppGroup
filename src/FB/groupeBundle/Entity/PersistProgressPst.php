@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity
  */
-class PersistProgressPst
+class PersistProgressPst implements \JsonSerializable
 {
   
     /**
@@ -285,5 +285,13 @@ class PersistProgressPst
     public function getNbrProgress()
     {
         return $this->nbrProgress;
+    }
+
+    public function jsonSerialize() {
+            $json = array();
+    foreach($this as $key => $value) {
+        $json[$key] = $value;
+    }
+    return $json;
     }
 }

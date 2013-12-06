@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table()
  * @ORM\Entity
  */
-class PersistProgressionMb
+class PersistProgressionMb implements \JsonSerializable
 {
 
 
@@ -134,5 +134,13 @@ class PersistProgressionMb
     public function getNbrAdmin()
     {
         return $this->nbrAdmin;
+    }
+
+    public function jsonSerialize() {
+        $json = array();
+    foreach($this as $key => $value) {
+        $json[$key] = $value;
+    }
+    return $json;
     }
 }

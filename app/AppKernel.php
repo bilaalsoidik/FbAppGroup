@@ -37,5 +37,8 @@ class AppKernel extends Kernel
     {   ini_set('max_execution_time', 0);
         date_default_timezone_set( 'Africa/Casablanca' );
         parent::init();
+        
     }
+    
+    
 }

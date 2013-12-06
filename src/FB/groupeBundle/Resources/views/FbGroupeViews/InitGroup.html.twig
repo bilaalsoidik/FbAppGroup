@@ -6,6 +6,7 @@
  function onFbInit() {
        if (typeof(FB) !=='undefined' && FB !== null )
        FB.Event.subscribe('auth.statusChange', function(response) {
+           
            if (response.session || response.authResponse){
        
        InialiserRechGroupe();             
@@ -16,7 +17,7 @@
             }); 
             }
             });
-            
+     FB.getLoginStatus();
     }
     
 var GroupeChoisit;
@@ -148,10 +149,10 @@ données, en saisissant un nom de groupe </p>
         {% set i=0%}
     {% for groupe in groupes%}
             
-            <li><div class="liengp cl1" > <a  href="https://www.facebook.com/{{groupe.id}}"> {{groupe.nom}}</a>  </div>
-                <div class="actions cl2" ><a id="importerMembres" href="#1{{i}}" onclick="importerMembres({{groupe.id}},'{{groupe.nom|replace({"'": "\'"})}}');"> Importer les membres</a></div>
-                <div class="actions cl1" ><a id="importerPosts" href="#2{{i}}" onclick="importerPosts( {{groupe.id}} , '{{groupe.nom|replace({"'": "\'"})}}');" > Importer les postes</a> </div>
-                <div class="actions cl2" ><a id="suprimerGp" href="#3{{i}}" onclick="supprimerGp({{groupe.id}},{{i}});" > Supprimer le groupe</a> </div> 
+            <li> <div class="liengp cl1"  ><a  href="https://www.facebook.com/{{groupe.id}}"> {{groupe.nom}}</a>  </div>
+                 <div class="actions cl2" ><a id="importerMembres" href="#1{{i}}" onclick="importerMembres({{groupe.id}},'{{groupe.nom|replace({"'": "\'"})}}');"> Importer les membres</a></div>
+                 <div class="actions cl1" ><a id="importerPosts" href="#2{{i}}" onclick="importerPosts( {{groupe.id}} , '{{groupe.nom|replace({"'": "\'"})}}');" > Importer les postes</a> </div>
+                 <div class="actions cl2" ><a id="suprimerGp" href="#3{{i}}" onclick="supprimerGp({{groupe.id}},{{i}});" > Supprimer le groupe</a> </div> 
             </li>
             {% set i=i+1%}
     {% endfor%}
@@ -159,7 +160,9 @@ données, en saisissant un nom de groupe </p>
  
          
 </div> 
- <div hidden id="dialog"></div>
+ <br>
+ 
+<div hidden id="dialog"></div>
  <audio id="son" preload="auto" > <source src="{{asset('bundles/FBgroupe/sons/successful.mp3') }}" type="audio/wav"></audio>
  
 <div id="dialogMembres">
@@ -170,16 +173,20 @@ Le nombre d'administrateur vous le saurez une fois les membres seront tous impor
 <br>
  <div id="progressbar" style="visibility: hidden;height: 24px;margin-top: 5px;"><center><div class="progress-label">Initialisation...</div> </center></div</div>                              
 </div>
- <div id="message_progress"  ></div>
- <div id="message_final"  ></div>
+<div id="message_progress"  ></div>
+
+<div id="message_final"  ></div>
  </div>
  
  <div id="dialogPosts"> 
  
  </div>
 
-{% endblock %} 
+ 
 
+
+
+{% endblock %}
 {% block scripts2 %} 
  
 <script type="text/javascript">
@@ -196,6 +203,11 @@ var      champ3;
 /*const*/IMPORT_DEP_DATE_CREAT=6;
 /*const*/IMPORT_JUSQ_DATE_CREAT=7; 
 
+/*const*/PROGRESS_MEMBRES=10;
+/*const*/PROGRESS_POSTS=20;
+
+var fluxouvert=false;
+
 $(function(){
     
      setTimeout(function (){
@@ -203,8 +215,14 @@ $(function(){
     $("#flash" ).hide( "pulsate", options, 1000);
     },2000);
     $(".progress-label" ).css("left","42%");
-    
-    $('#dialogMembres').dialog({ 
+ 
+ 
+ //=============================================
+ //DIALOGUE DES GESTION D'IMPORTATION DES MEMBRES
+ //============================================
+    progressbarInit=false;
+    $('#dialogMembres').dialog(
+            { 
       autoOpen: false,
       height: 380,
       width : 550,
@@ -228,6 +246,7 @@ $(function(){
           progressLabel = $( ".progress-label" );
          if(!importFini){
              progressbar.css( "visibility", "visible" );
+             if(!progressbarInit){
               progressbar.progressbar({
               value: false,
               max:100,
@@ -238,11 +257,13 @@ $(function(){
              progressLabel.text( "Accomplit !" ).css("left","42%");;
               }
           });
+          progressbarInit=true;
+             }
          $("ok").attr("disabled", true);
          var limit=$('#limit').val();
          var  route= "{{ path('import_membres',{ id_groupe:'id_groupe',
-                                                       nbrmembre:'nbrmembre',
-                                                       limit:'limit'}) }}";
+                                                 nbrmembre:'nbrmembre',
+                                                 limit:'limit'}) }}";
          var URL=route.replace('id_groupe',id_groupe_courant)
                        .replace('nbrmembre',nombreMembreGp)
                        .replace('limit',limit);
@@ -253,6 +274,7 @@ $(function(){
                 }
                     ).done(function(data) {
                      importFini=true;
+                     WorkerWSockProgress.postMessage("arret");
                      document.getElementById("son").play();
                      progressbar.progressbar( "value",100);
                      $("#message_progress").html('<img id="success" src="{{ asset('bundles/FBgroupe/images/succes2.png') }}"/>  '+
@@ -263,12 +285,20 @@ $(function(){
                      var b=data.nbrProgress-data.nbrMembre;
                      if(b>0)$("#message_final").append("<br><span class='labele'>"+b+"</span> membres existaient déjà");
                      $("#ok").find('.ui-button-text').html("  OK  ");
-                     ThreadProgressMb.terminate();         
+        
                             });
-                                                                            
-        URL="{{path('membresProgress',{id_gp:'id_groupe'}) }}"; 
-        URL=URL.replace("id_groupe",id_groupe_courant);
-        ThreadProgressMb.postMessage(URL);
+        
+         var msg=new Object();
+         msg.code=PROGRESS_MEMBRES;
+         msg.donnee=new Object();
+         msg.donnee.id_groupe=id_groupe_courant;
+         message=JSON.stringify(msg); 
+         WorkerWSockProgress.postMessage(message);
+         
+         //cas sans websocket utilisant lew worker et ke polling
+        //URL="{{path('membresProgress',{id_gp:'id_groupe'}) }}"; 
+       // URL=URL.replace("id_groupe",id_groupe_courant);
+       // WorkerWSockProgressMb.postMessage(URL);
                            
         }else {
              $( this ).dialog( "close" );
@@ -281,14 +311,23 @@ $(function(){
           $("#progress").css( "visibility", "hidden" );
           $("#message_progress").html("");
           importFini=true;
+          progressbarInit=false;
         }
         }
       ]
       ,open: function( event, ui ) {
           importFini=false;
           $("#progress").css( "visibility", "hidden" );
-           ThreadProgressMb = new Worker("{{ asset('bundles/FBgroupe/js/threadRecuperation.js') }}");
-           ThreadProgressMb.onmessage = function (event) {
+        if (typeof(WorkerWSockProgress) ==='undefined'|| WorkerWSockProgress === null )
+           WorkerWSockProgress = new Worker("{{ asset('bundles/FBgroupe/js/threadRecuperation.js') }}");
+          
+        if(!fluxouvert){
+           WorkerWSockProgress.postMessage("demarrer");
+           fluxouvert=true;
+           }
+           
+           WorkerWSockProgress.onmessage = function (event) {
+               
            var data=JSON.parse(event.data);
            var progress=data.nbrProgress;
                 if(progress>0){
@@ -308,6 +347,7 @@ $(function(){
                 progressLabel.css("left","48%");}
                 
                 }
+                console.log("Message reçu et traité");
          };
       },
       close:function(event,ui){
@@ -322,51 +362,124 @@ $(function(){
           progressLabel.text("Initialisation...");
       }
     });
-     
+ 
+ 
+ //=============================================
+ //=============================================
+ //DIALOGUE DES GESTION D'IMPORTATION DES POSTES
+ //=============================================
+ //=============================================
+ progressbar2Init=false;
+
     $("#dialogPosts").dialog({
       autoOpen:false,
-      height: 430,
-      width : 600,
+      height: 500,
+      width : 630,
       title:" Importation des posts du groupe",
       modal: true,
       open: function( event, ui ) {
            importFini=false;
+           encore=false;
           $("#nomGroupe").text(nomGroupe).addClass("labele");
           $("#progress").css( "visibility", "hidden" ); 
-           ThreadProgressPost = new Worker("{{ asset('bundles/FBgroupe/js/threadRecuperation.js') }}");
-           ThreadProgressPost.onmessage = function (event) {
-  
+          id_post_encour="";
+           if (typeof(WorkerWSockProgress) ==='undefined'|| WorkerWSockProgress === null )
+           WorkerWSockProgress = new Worker("{{ asset('bundles/FBgroupe/js/threadRecuperation.js') }}");
+        scontenuDia=$("#contDia");
+        messageFinale=$("#message_final2").detach();
+        if(!fluxouvert){
+           WorkerWSockProgress.postMessage("demarrer");
+           fluxouvert=true;
+           }
+           
+           WorkerWSockProgress.onmessage = function (event) {
+               
+           if(500===event.data){
+               fluxouvert=false;}
+           else {
+               
            var data=JSON.parse(event.data);
            nbrTotPost=data.nbrTotPost;
            
            var progress=data.nbrProgress;
                 if(progress>0){ var message1;
                 if(!importFini){
-                    
+         // {idGroupe,nbrTotPost,idPost,nbrToJaime,nbrJaimeImport,nbrTotComment,
+         // nbrComImport,nbrPostImport,nbrProgress}
+                 progressbarJaimes.css("visibility","visible");
+                 progressbarComment.css("visibility","visible");
+                 
+                 
                 if(MODE_IMPORT===1){
-                  message1="<span class='labele'>"+data.nbrPostImport+"</span> posts recupérés et enregistrés!";
+                  message1="<span class='labele'>"+data.nbrPostImport+"</span> posts recupérés et enregistrés! ";
                   progressLabel2.text( "En progression ..." ).css("left","42%");
                 
-                }else{
+                } else{
                 var val=Math.round((progress/nbrTotPost)*100);
                 if(val>=99)progressbar2.progressbar("value",99);
                 else       progressbar2.progressbar("value",val);
                 
                 
                   message1="<span class='labele'>"+data.nbrPostImport+"</span> sur <span class='labele'>"+
-                              nbrTotPost+"</span> posts recupérés et enregistrés!";
+                              nbrTotPost+"</span> posts recupérés et enregistrés! ";
              
                 progressLabel2.css("left","48%");
                 }
                 var a=progress-data.nbrPostImport;
                 var message=(a>0)? message1+
-                                   "<br><span class='labele'>"+a+"</span> posts sur cette requete existaient déjà!"
+                                   "<span class='labele'> "+a+"</span> posts sur cette requete existaient déjà!"
                                    :message1;
                 $("#message_progress2").html(message);
+                
+                if(data.nbrToJaime>0){
+                   var valjm=Math.round((data.nbrJaimeImport/data.nbrToJaime)*100);
+                   progressbarJaimes.progressbar("value",valjm); 
+                   
+                  $("#message_progressJaimes").html("<span class='labele'>"+data.nbrJaimeImport+
+                                               "</span> sur <span class='labele'>"+data.nbrToJaime+
+                                               "</span> jaimes recupérés et enrgistrés");    
+                 }else
+                  if(data.nbrToJaime==0){
+                     progressbarJaimes.progressbar("value",0);
+                     progressLabelJaimes.text(" En attente ...");
+                     $("#message_progressJaimes").text("En attente de recupération ..").css("left","37%");
+                 } 
+                 else if(data.nbrToJaime==-1){
+                     
+                     progressbarJaimes.progressbar("value",0);
+                     progressLabelJaimes.text(" O jaimes pour le post");
+                     $("#message_progressJaimes").text("Pas de jaimes pour le post ..").css("left","37%");
+                 } 
+                 
+                
+                 if(data.nbrTotComment>0){
+                   var valcom=Math.round((data.nbrComImport/data.nbrTotComment)*100);
+                   var valjm=Math.round((data.nbrJaimeImport/data.nbrToJaime)*100);
+                   progressbarComment.progressbar("value",valcom);
+                   
+                   $("#message_progressComment").html("<span class='labele'>"+data.nbrComImport+
+                                               "</span> sur <span class='labele'>"+data.nbrTotComment+
+                                               "</span> commentaires recupérés et enrgistrés");
+                 } else
+                     if(data.nbrTotComment==0){
+                     progressbarComment.progressbar("value",0);
+                     progressLabelComment.text(" En attente ...").css("left","37%");
+                     $("#message_progressComment").text("En attente des reupération ..");
+                 }else if(data.nbrTotComment==-1){
+                    
+                     progressbarComment.progressbar("value",0);
+                     progressLabelComment.text(" 0 comment pour le post ...").css("left","37%");;
+                     $("#message_progressComment").text("Pas de commentaire pour le post ..")
+                     
+                 }
+                 
+                     
                 }
                 
                 
            }
+       }
+           console.log("Message reçu et traité");
          };
       },
       close:function(){
@@ -398,6 +511,7 @@ $(function(){
   
          if(!importFini){
               progressbar2.css( "visibility", "visible" );
+        if(!progressbar2Init){
               progressbar2.progressbar({
               value: false,
               max:100,
@@ -408,6 +522,33 @@ $(function(){
               progressLabel2.text( "Accomplit !" ).css("left","42%");
               }
           }); 
+          progressbarJaimes = $( "#progressbarJaimes" );
+          progressLabelJaimes = $( ".progress-labelJaimes" );
+          progressbarJaimes.progressbar({
+              value: false,
+              max:100,
+              change: function() {
+              progressLabelJaimes.text( progressbarJaimes.progressbar( "value" ) + "%" );
+               },
+              complete: function() {
+              progressLabelJaimes.text( "Accomplit !" ).css("left","42%");
+              }
+          });
+       ;
+          progressbarComment = $( "#progressbarComment" );
+          progressLabelComment = $( ".progress-labelComment" );
+          progressbarComment.progressbar({
+              value: false,
+              max:100,
+              change: function() {
+              progressLabelComment.text( progressbarComment.progressbar( "value" ) + "%" );
+               },
+              complete: function() {
+              progressLabelComment.text( "Accomplit !" ).css("left","42%");
+              }
+          });
+          progressbar2Init=true;
+      }
           
          $("ok2").attr("disabled", true);
              
@@ -428,7 +569,7 @@ $(function(){
                 }).done(function(data){ 
                 // {idGroupe,nbrTotPost,idPost,nbrToJaime,nbrJaimeImport,nbrTotComment,nbrComImport,nbrPostImport,nbrProgress}
                      importFini=true;
-                     ThreadProgressPost.terminate();
+                     WorkerWSockProgress.postMessage("arret");
                      document.getElementById("son").play();
                      progressbar2.progressbar( "value",100);
                      $("#message_progress2").html('<img id="success" src="{{ asset('bundles/FBgroupe/images/succes2.png') }}"/>  '+
@@ -443,11 +584,11 @@ $(function(){
          if(MODE_IMPORT>=2&&MODE_IMPORT<=7){
          
          //Les valeurs fournis sont à remplacer avec les vrais valeurs
-         route2="{{ path('importPost',{  id_groupe:   'id_groupe',
-                                                  MODE_IMPORT: 'MODE_IMPORT',
-                                                  date_depuis: 'date_depuis',
-                                                  date_jusqua: 'date_jusqua',
-                                                  limit:'25'})  }}";
+         route2="{{ path('importPost',{   id_groupe:   'id_groupe',
+                                          MODE_IMPORT: 'MODE_IMPORT',
+                                          date_depuis: 'date_depuis',
+                                          date_jusqua: 'date_jusqua',
+                                          limit:'25'})  }}";
                                     
          var date_depuis;
          var date_jusqua;
@@ -477,9 +618,14 @@ $(function(){
                 }).done(function(data){ 
                 // {idGroupe,nbrTotPost,idPost,nbrToJaime,nbrJaimeImport,nbrTotComment,nbrComImport,nbrPostImport,nbrProgress}
                      importFini=true;
-                     ThreadProgressPost.terminate();
+                     WorkerWSockProgress.postMessage("arret");
                      document.getElementById("son").play();
                      progressbar2.progressbar( "value",100);
+                     progressbarJaimes.css("visibility","hidden");
+                     progressbarComment.css("visibility","hidden");
+                     donnesPost=$("#donnespost").detach();
+                     scontenuDia.append(messageFinale); 
+                     encore=true; 
                      $("#message_progress2").html('<img id="success" src="{{ asset('bundles/FBgroupe/images/succes2.png') }}"/>  '+
                                         ' <p style="line-height:52px;margin-left:53px"> Importation de données fini avec succès </p>');
                      $("#message_final2").html("<span class='labele'>"+data.nbrPostImport+"</span> nouveux posts enregistés avec la liste des jaimes et des commentaires");
@@ -489,11 +635,21 @@ $(function(){
                      date_jusqua=date_depuis="";
                             });
          }
-          
+        
         //SUIVI DE LA PROGRESSION
-        var URL3="{{path('postsProgress',{id_gp:'id_groupe'}) }}"; 
-        URL3=URL3.replace("id_groupe",id_groupe_courant);
-        ThreadProgressPost.postMessage(URL3);
+         var msg=new Object();
+         msg.code=PROGRESS_POSTS;
+         msg.donnee=new Object();
+         msg.donnee.id_groupe=id_groupe_courant;
+         message=JSON.stringify(msg); 
+         WorkerWSockProgress.postMessage(message);
+       if(encore){
+        messageFinale=messageFinale.detach();
+         scontenuDia.append(donnesPost);}
+        //Ancien méthode
+        //var URL3="{{path('postsProgress',{id_gp:'id_groupe'}) }}"; 
+        //URL3=URL3.replace("id_groupe",id_groupe_courant);
+        //ThreadProgressPost.postMessage(URL3);
                            
         }else 
         {
@@ -507,7 +663,7 @@ $(function(){
           $("#progress").css( "visibility", "hidden" );
           $("#message_progress").html("");
           importFini=true;
-          
+          progressbar2Init=false;
         }
         }
       ] 
@@ -559,8 +715,11 @@ function importerPosts(id_groupe,nomGroupe){
         });
        $(this).find("select").change( function (){
            importFini=false;
+           
            $("#ok2").find('.ui-button-text').html("Demarrer l'importation"); 
           progressbar2 = $( "#progressbar2" );
+          progressLabel2 = $( ".progress-label2" );
+          if(!progressbar2Init){
           progressbar2.progressbar({
               value: false,
               max:100,
@@ -571,8 +730,36 @@ function importerPosts(id_groupe,nomGroupe){
               progressLabel2.text( "Accomplit !" ).css("left","42%");
               }
           });
+          progressbarJaimes = $( "#progressbarJaimes" );
+          progressLabelJaimes = $( ".progress-labelJaimes" );
+          progressbarJaimes.progressbar({
+              value: false,
+              max:100,
+              change: function() {
+              progressLabelJaimes.text( progressbarJaimes.progressbar( "value" ) + "%" );
+               },
+              complete: function() {
+              progressLabelJaimes.text( "Accomplit !" ).css("left","42%");
+              }
+          });
+       ;
+          progressbarComment = $( "#progressbarComment" );
+          progressLabelComment = $( ".progress-labelComment" );
+          progressbarComment.progressbar({
+              value: false,
+              max:100,
+              change: function() {
+              progressLabelComment.text( progressbarComment.progressbar( "value" ) + "%" );
+               },
+              complete: function() {
+              progressLabelComment.text( "Accomplit !" ).css("left","42%");
+              }
+          });
+          progressbar2Init=true;
+          }
           progressbar2.progressbar("value",false);
-          progressLabel2 = $( ".progress-label2" );
+          progressbarJaimes.progressbar("value",false);
+          progressbarComment.progressbar("value",false);
             $("#message_progress2").html("");
             $("#message_final2").html("");
             

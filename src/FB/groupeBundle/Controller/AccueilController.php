@@ -14,6 +14,7 @@ use FB\groupeBundle\Form\GroupeType;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\DBAL\DBALException;
 
+
 class AccueilController extends Controller
 {   
     
@@ -24,24 +25,27 @@ class AccueilController extends Controller
      */
     public function indexAction()
     {
-        
-         
             $facebook = $this->get('fos_facebook.api'); 
             $user=$this->get('session')->get('utilisateur');
-    if($facebook->getUser()==0||!isset($user)) 
-        return $this->render('FBgroupeBundle:Accueil:index.html.twig');
-     else
-          return $this->render('FBgroupeBundle:Accueil:indexLoged.html.twig');
-        
+            
+            if ($facebook->getUser() == 0 || !isset($user)) {
+            $reponse=$this->render('FBgroupeBundle:Accueil:index.html.twig');
+               } else {
+            $reponse= $this->render('FBgroupeBundle:Accueil:indexLoged.html.twig');
+              }
+             
+           
+     return $reponse;
     }
     
     
     public function login_reussiAction(){
         $facebook = $this->get('fos_facebook.api');
     
-       if($facebook->getUser()==0) 
-           return $this->forward ("FBgroupeBundle:Accueil:index");
-  
+        if ($facebook->getUser() == 0) {
+            return $this->forward("FBgroupeBundle:Accueil:index");
+        }
+
         $facebook->setExtendedAccessToken();
           
         $access_token=$facebook->getAccessToken();
@@ -72,13 +76,14 @@ class AccueilController extends Controller
      */
    public function ajouterGroupAction(){
        $facebook = $this->get('fos_facebook.api');
-       if($facebook->getUser()==0) 
-           return $this->forward ("FBgroupeBundle:Accueil:index");
-       
-       $formulaire=$this->createForm(new GroupeType());
-       $em=$this->getDoctrine()->getManager();  
-       $request=$this->getRequest();
-       if($request->isMethod('POST')){
+       if ($facebook->getUser() == 0) {
+            return $this->forward("FBgroupeBundle:Accueil:index");
+        }
+
+        $formulaire=$this->createForm(new GroupeType());
+        $em=$this->getDoctrine()->getManager();  
+        $request=$this->getRequest();
+        if($request->isMethod('POST')){
         $formulaire->bind($request);
         $un_groupe=$formulaire->getData();
         $em->persist($un_groupe);
@@ -113,8 +118,9 @@ class AccueilController extends Controller
      */
 public function supprimerGroupAction($idgp){
     $facebook = $this->get('fos_facebook.api');
-       if($facebook->getUser()==0) 
-           return $this->forward ("FBgroupeBundle:Accueil:index");
+    if($facebook->getUser() == 0) {
+            return $this->forward("FBgroupeBundle:Accueil:index");
+        }
      $em=$this->getDoctrine()->getManager();
      $gp=$em->find("FBgroupeBundle:Groupe",$idgp);
      try{
@@ -143,6 +149,8 @@ public function deconnecteAction(){
       return $this->redirect($this->generateUrl("f_bgroupe_accueil"));
 
 }
-      
+  
    
+
+
 }

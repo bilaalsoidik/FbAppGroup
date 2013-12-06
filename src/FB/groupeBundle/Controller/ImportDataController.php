@@ -1,13 +1,6 @@
 <?php
 namespace FB\groupeBundle\Controller;
 
-/**
- * @author Bilal Soidik <bilalsoidik@gmail.com>
- * @copyright (c) 2013, Bilal Soidik
- * 
- */
-
-
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,10 +12,17 @@ use FB\groupeBundle\Entity\Commentaire;
 use FB\groupeBundle\Entity\Historique;
 use FB\groupeBundle\Entity\PersistProgressionMb;
 use FB\groupeBundle\Entity\PersistProgressPst;
-use Symfony\Component\Serializer\Serializer;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
 use FOS\FacebookBundle\Facebook\FacebookSessionPersistence;
+
+/**
+ * Ce controlleur permet de recuperer l'ensemble des données d'un groupe
+ * facebook à part les données d'indetification qui sont gégé par les controleur
+ * d'accueil
+ * 
+ * @author Bilal Soidik <bilalsoidik@gmail.com>
+ * @copyright (c) 2013, Bilal Soidik
+ * 
+ */
 
 class ImportDataController extends Controller {
     
@@ -137,6 +137,7 @@ class ImportDataController extends Controller {
      */
     private $progressPstPersistance;
     
+    //private $fluxWebSoket;
     /**
      * L'action qui permet de récupérer les membres d'un groupe facebook vers notre base de données
      *
@@ -152,13 +153,16 @@ class ImportDataController extends Controller {
               
         $this->facebook = $this->get('fos_facebook.api');
     
-       if($this->facebook->getUser()==0) 
-           return $this->forward ("FBgroupeBundle:Accueil:index");
-       
+        if ($this->facebook->getUser() == 0) {
+            return $this->forward("FBgroupeBundle:Accueil:index");
+        }
+
         $this->manager = $this->getDoctrine()->getManager();
 
         $this->groupe = $this->manager->find("FBgroupeBundle:Groupe", $id_groupe);
-
+        
+        
+        
         $this->progressMbPersistance=$this->manager->find("FBgroupeBundle:PersistProgressionMb", $id_groupe);
        
         //CODE POUR LE SUIVI DE LA PROGRESSION
@@ -167,6 +171,7 @@ class ImportDataController extends Controller {
         $this->progressMbPersistance->setIdGroupe($id_groupe);
         $this->manager->persist($this->progressMbPersistance);
         $this->manager->flush();
+        
         }
         
         if (!$this->groupe) {
@@ -223,10 +228,11 @@ class ImportDataController extends Controller {
                 $this->manager->flush();
             }
         } else {
-            if (isset($CreateurGb[id]))
+            if (isset($CreateurGb[id])) {
                 return new Response("Le createur du groupe ne fait plus parti des memebres, possible qu'il a quitté le groupe");
-            else
+            } else {
                 return new Response("Pas de recupération d'information de profile depuis facebook");
+            }
         }
 
         $nbrImporte = 0;
@@ -255,9 +261,10 @@ class ImportDataController extends Controller {
                                     ->setSexe(isset($membre['gender']) ? (($membre['gender'] == 'male') ? "M" : "F") : "")
                                     ->setEmail(isset($membre['email']) ? $membre['email'] : "");
 
-            
+                    $this->manager->persist($this->new_usr);
+                    
                     try {
-                        $this->manager->persist($this->new_usr);
+                        
                         $this->manager->flush();
                     } catch (DBALException $e) {
 
@@ -324,11 +331,10 @@ class ImportDataController extends Controller {
         }
         }
 
-        $encoders = array(new JsonEncoder());
-        $normalizers = array(new GetSetMethodNormalizer());
+        
 
-        $serializer = new Serializer($normalizers, $encoders);
-        $objetJSON=$serializer->serialize($this->progressMbPersistance, 'json');
+        
+        $objetJSON=  json_encode($this->progressMbPersistance);
             
         $response = new Response($objetJSON);
           
@@ -348,7 +354,7 @@ class ImportDataController extends Controller {
      *Le mode d'importation nous permettra de connaitre la requete à executer
      *
      *
-     * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{date_depuis}&{date_jusqua}&{limit}",  name="importPost")
+     * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{limit}&{date_depuis}&{date_jusqua}",  name="importPost")
      * @Route("/importposts/{id_groupe}&{MODE_IMPORT}&{limit}", defaults={"MODE_IMPORT" = 1}, name="importTout")
      * 
      * @param integer $id_groupe l'id du groupe
@@ -360,7 +366,7 @@ class ImportDataController extends Controller {
      * @return PersistProgressPst au format json
      * 
      */
-    public function importPostsAction($id_groupe, $MODE_IMPORT, $date_depuis = null, $date_jusqua = null,$limit = 25) {
+    public function importPostsAction($id_groupe, $MODE_IMPORT, $limit, $date_depuis = null, $date_jusqua = null) {
 
          $this->facebook = $this->get('fos_facebook.api');
     
@@ -429,10 +435,14 @@ class ImportDataController extends Controller {
         else  //IMPORTATION SELON LA DATE DE MISE A JOUR  
                if(in_array($MODE_IMPORT, array(2,3,4))) {
       
-       if(isset($date_depuis)&&$date_depuis!='null') $this->tempstime_depuis = strtotime($date_depuis);
-       if(isset($date_jusqua)&&$date_jusqua!='null') $this->tempstime_jusqua = strtotime($date_jusqua);
-        
-        switch ($MODE_IMPORT) {
+            if (isset($date_depuis) && $date_depuis != 'null') {
+                $this->tempstime_depuis = strtotime($date_depuis);
+            }
+            if (isset($date_jusqua) && $date_jusqua != 'null') {
+                $this->tempstime_jusqua = strtotime($date_jusqua);
+            }
+
+            switch ($MODE_IMPORT) {
          
             //Cette requette va boucler en fonction du pas
             case self::IMPORT_JUSQUA : $requete = "/$id_groupe?fields=feed.until($this->tempstime_jusqua).limit" .
@@ -537,11 +547,9 @@ class ImportDataController extends Controller {
               $this->importPost($post);            
         }//fin foreach sur les id des postes     
         }
-        $encoders = array(new JsonEncoder());
-        $normalizers = array(new GetSetMethodNormalizer());
 
-        $serializer = new Serializer($normalizers, $encoders);
-        $objetJSON=$serializer->serialize($this->progressPstPersistance, 'json');
+        
+        $objetJSON=  json_encode($this->progressPstPersistance);
         
         //LIBERATION DES DONNEES DE SUIVI
         $this->progressPstPersistance->setNbrComImport(0)
@@ -654,13 +662,15 @@ class ImportDataController extends Controller {
             $this->progression++;
             $this->nPostImporté++;
             $this->progressPstPersistance->setIdPost($this->new_post->getId())
-                                                ->setNbrProgress($this->progression)
-                                                ->setNbrPostImport($this->nPostImporté);
+                                         ->setNbrProgress($this->progression)
+                                         ->setNbrPostImport($this->nPostImporté)
+                                         ->setNbrToJaime(0)
+                                         ->setNbrTotComment(0);
             $this->manager->flush();
             
             //RECUPERATION DES JAIMES
             $this->importJaimes();
-            $this->manager->flush();
+           
             
             } catch (DBALException $e) {
                 //Si l'entity Manager est férmé
@@ -695,15 +705,20 @@ class ImportDataController extends Controller {
             if(isset($ResultJaimes['likes'])){
                 
             $nbrTotJaime = count($ResultJaimes['likes']['data']);
-            
-            $this->progressPstPersistance->setNbrJaimeImport($nbrTotJaime);
-             //On boucle sur les jaimes
+            $nbrJaimesImport=0;
+            $this->progressPstPersistance->setNbrToJaime($nbrTotJaime);
+            $this->manager->flush();
+             
             foreach ($ResultJaimes['likes']['data'] as &$usr_passioné) {
-
+                
                 $this->findOuCreatMembre($usr_passioné['id']);
                 $this->new_post->addJaime($this->new_usr);
+                $nbrJaimesImport++;
+                $this->progressPstPersistance->setNbrJaimeImport($nbrJaimesImport);  
+                $this->manager->flush();
             }
-            }     $this->progressPstPersistance->setNbrJaimeImport(0);  
+            }     $this->progressPstPersistance->setNbrToJaime(-1); 
+            $this->manager->flush();
     }
     
    /** 
@@ -742,7 +757,7 @@ class ImportDataController extends Controller {
    
             $this->manager->persist($commentaire);
             $nbrCommentImport++;
-            $this->progressPstPersistance->setNbrJaimeImport($nbrCommentImport);
+            $this->progressPstPersistance->setNbrComImport($nbrCommentImport);
             $this->manager->flush();
             
             } catch (DBALException $e) {
@@ -757,10 +772,12 @@ class ImportDataController extends Controller {
                     $nbrCommentImport--;
                 }
             }              }
-            }$this->progressPstPersistance->setNbrTotComment(0);
+            }$this->progressPstPersistance->setNbrTotComment(-1);
     }
-    /**
-     * Cette méthode nous pertmet de suivre la progression de l'importation des posts
+
+
+/**
+     * Cette méthode nous pertmet de suivre la progression de l"importation des posts
      * A chaque ajout on persiste un objet de PersistProgressPst
      *
      * @Route("/importposts/progress/{id_gp}" , name="postsProgress")
@@ -774,12 +791,8 @@ class ImportDataController extends Controller {
      
         $em=$this->getDoctrine()->getManager();
         $this->progressPstPersistance=$em->find("FBgroupeBundle:PersistProgressPst", $id_gp);
-          
-        $encoders = array(new JsonEncoder());
-        $normalizers = array(new GetSetMethodNormalizer());
-
-        $serializer = new Serializer($normalizers, $encoders);
-        $objetJSON=$serializer->serialize($this->progressPstPersistance, 'json');
+        
+        $objetJSON=  json_encode($this->progressPstPersistance);
         $response=new Response($objetJSON);
         $response->headers->set('Content-Type', 'application/json');
         return $response;
@@ -801,12 +814,8 @@ class ImportDataController extends Controller {
        
         $em=$this->getDoctrine()->getManager();
         $this->progressMbPersistance=$em->find("FBgroupeBundle:PersistProgressionMb", $id_gp);
-        
-        $encoders = array(new JsonEncoder());
-        $normalizers = array(new GetSetMethodNormalizer());
-
-        $serializer = new Serializer($normalizers, $encoders);
-        $objetJSON=$serializer->serialize($this->progressMbPersistance, 'json');
+ 
+        $objetJSON=  json_encode($this->progressMbPersistance);
        $response=new Response($objetJSON);
         $response->headers->set('Content-Type', 'application/json');
         return $response;
@@ -824,16 +833,11 @@ class ImportDataController extends Controller {
     public function sendVuesImportPostAction() {
     $this->facebook = $this->get('fos_facebook.api');
     
-       if($this->facebook->getUser()==0) 
-           return $this->forward ("FBgroupeBundle:Accueil:index");
-       
+    if($this->facebook->getUser() == 0) {
+            return $this->forward("FBgroupeBundle:Accueil:index");
+        }
+
         return $this->render('FBgroupeBundle:FbGroupeViews:VuesImportPost.html.twig');
-    }
-
-    
-
-    public function TestACT(){
-        
     }
     
 }

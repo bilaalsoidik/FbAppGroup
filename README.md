@@ -3,7 +3,7 @@ Facebook App d'importation de données d'un groupe
 
 Bienvenue dans cette application développé en php avec symfony 2 qui permet de récupérer les données d'un groupe Facebook vers une base de données externe à Facebook. Ce present document décrit comment l'installer sur une platforme Windows. Je tiens à souligner que l'application présent est en mode développement, ainsi l'indexe du projet c'est le fichier app_dev.php. 
 
-Installation l'application
+Installation de l'application
 -------------------------------------------------
 
 1. Avant d'installer cette application pour tester ou développer d'avantage, il faut avoir déjà crée l'application auprès de Facebook. Sur lien [https://developers.facebook.com/apps][1], pour plus de détail sur comment créer l'application et comment configurer, referez vous au [document de l'atelier de création de l'application][2], après vous recuperer l'id de l'application et la clé secrete, vous les enregistrer dans un fichier sur votre PC.

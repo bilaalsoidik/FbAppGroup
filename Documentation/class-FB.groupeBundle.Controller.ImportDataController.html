@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class FB\groupeBundle\Controller\ImportDataController |  FbAppGroup Documentation</title>
+
+	<script type="text/javascript" src="resources/combined.js?1766883937"></script>
+	<script type="text/javascript" src="elementlist.js?4028736562"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-FB.html">FB<span></span></a>
+						<ul>
+				<li class="active"><a href="namespace-FB.groupeBundle.html">groupeBundle<span></span></a>
+						<ul>
+				<li class="active"><a href="namespace-FB.groupeBundle.Controller.html">Controller</a>
+						</li>
+				<li><a href="namespace-FB.groupeBundle.DependencyInjection.html">DependencyInjection</a>
+						</li>
+				<li><a href="namespace-FB.groupeBundle.Entity.html">Entity</a>
+						</li>
+				<li><a href="namespace-FB.groupeBundle.Form.html">Form</a>
+						</li>
+				<li><a href="namespace-FB.groupeBundle.Tests.html">Tests<span></span></a>
+						<ul>
+				<li><a href="namespace-FB.groupeBundle.Tests.Controller.html">Controller</a>
+						</li>
+							</ul></li></ul></li></ul></li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-FB.groupeBundle.Controller.AccueilController.html">AccueilController</a></li>
+				<li class="active"><a href="class-FB.groupeBundle.Controller.ImportDataController.html">ImportDataController</a></li>
+				<li><a href="class-FB.groupeBundle.Controller.Outils.html">Outils</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-FB.groupeBundle.Controller.html" title="Summary of FB\groupeBundle\Controller"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class ImportDataController</h1>
+
+
+	<div class="description">
+	
+<p>Ce controlleur permet de recuperer l'ensemble des données d'un groupe
+facebook à part les données d'indetification qui sont gégé par les
+controleur d'accueil</p>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+Symfony\Bundle\FrameworkBundle\Controller\Controller
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>FB\groupeBundle\Controller\ImportDataController</span></b>			
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-FB.html">FB</a>\<a href="namespace-FB.groupeBundle.html">groupeBundle</a>\<a href="namespace-FB.groupeBundle.Controller.html">Controller</a><br />
+		
+
+				<b>Copyright:</b>
+				(c) 2013, Bilal Soidik<br />
+				<b>Author:</b>
+				Bilal Soidik &lt;<a
+href="mailto:bilalsoidik&#64;gmail.com">bilalsoidik&#64;<!---->gmail.com</a>&gt;<br />
+		<b>Located at</b> <a href="source-class-FB.groupeBundle.Controller.ImportDataController.html#18-843" title="Go to source code">FB/groupeBundle/Controller/ImportDataController.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="importMembresAction" id="_importMembresAction">
+
+		<td class="attributes"><code>
+			 public 
+			Symfony\Component\HttpFoundation\Response
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_importMembresAction">#</a>
+		<code><a href="source-class-FB.groupeBundle.Controller.ImportDataController.html#141-350" title="Go to source code">importMembresAction</a>( <span>integer <var>$id_groupe</var></span>, <span>integer <var>$nbrmembre</var></span>, <span>integer <var>$limit</var> = <span class="php-num">40</span></span> )</code>
+
+		<div class="description short">
+			
+<p>L'action qui permet de récupérer les membres d'un groupe facebook vers
+notre base de données</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>L'action qui permet de récupérer les membres d'un groupe facebook vers
+notre base de données</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$id_groupe</var></dt>
+					<dd><code>integer</code><br>$id_groupe l'id du groupe</dd>
+					<dt><var>$nbrmembre</var></dt>
+					<dd><code>integer</code><br>$nbrmembre nombre des membre d'un groupe</dd>
+					<dt><var>$limit</var></dt>
+					<dd><code>integer</code><br>$limit la limite d'un bloc de requette</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Symfony\Component\HttpFoundation\Response</code><br />
+				</div>
+
+
+				<h4>Route("/importmembres/{id_groupe}&amp;{nbrmembre}&amp;{limit}",</h4>
+				<div class="list">
+						name="import_membres")<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="importPostsAction" id="_importPostsAction">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-FB.groupeBundle.Entity.PersistProgressPst.html">FB\groupeBundle\Entity\PersistProgressPst</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_importPostsAction">#</a>
+		<code><a href="source-class-FB.groupeBundle.Controller.ImportDataController.html#352-567" title="Go to source code">importPostsAction</a>( <span>integer <var>$id_groupe</var></span>, <span>string <var>$MODE_IMPORT</var></span>, <span>string <var>$limit</var></span>, <span>integer <var>$date_depuis</var> = <span class="php-keyword1">null</span></span>, <span>const <var>$date_jusqua</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>L'action qui permet de récupérer les postes vers notre base données selon
+différents type de mode 'importation Le mode d'importation nous permettra de
+connaitre la requete à executer</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>L'action qui permet de récupérer les postes vers notre base données selon
+différents type de mode 'importation Le mode d'importation nous permettra de
+connaitre la requete à executer</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$id_groupe</var></dt>
+					<dd><code>integer</code><br>$id_groupe l'id du groupe</dd>
+					<dt><var>$MODE_IMPORT</var></dt>
+					<dd><code>string</code><br>$date_depuis une date antérieur vers des posts à date postérieur , un string
+au format date</dd>
+					<dt><var>$limit</var></dt>
+					<dd><code>string</code><br>$date_jusqua une date postérieur vers des posts à date antérieur , un string
+au format date</dd>
+					<dt><var>$date_depuis</var></dt>
+					<dd><code>integer</code><br>$limit la limite d'un bloc de requette</dd>
+					<dt><var>$date_jusqua</var></dt>
+					<dd><code>const</code><br>$MODE_IMPORT Mode d'importation de post</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-FB.groupeBundle.Entity.PersistProgressPst.html">FB\groupeBundle\Entity\PersistProgressPst</a></code></code><br>au format json<br />
+				</div>
+
+
+				<h4>Route("/importposts/{id_groupe}&amp;{MODE_IMPORT}&amp;{limit}",</h4>
+				<div class="list">
+						defaults={"MODE_IMPORT" = 1}, name="importTout")<br />
+				</div>
+				<h4>Route("/importposts/{id_groupe}&amp;{MODE_IMPORT}&amp;{limit}&amp;{date_depuis}&amp;{date_jusqua}",</h4>
+				<div class="list">
+						name="importPost")<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="progressPostsAction" id="_progressPostsAction">
+
+		<td class="attributes"><code>
+			 public 
+			Symfony\Component\HttpFoundation\Response
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_progressPostsAction">#</a>
+		<code><a href="source-class-FB.groupeBundle.Controller.ImportDataController.html#780-799" title="Go to source code">progressPostsAction</a>( <span>long <var>$id_gp</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Cette méthode nous pertmet de suivre la progression de l"importation des
+posts A chaque ajout on persiste un objet de PersistProgressPst</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Cette méthode nous pertmet de suivre la progression de l"importation des
+posts A chaque ajout on persiste un objet de PersistProgressPst</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$id_gp</var></dt>
+					<dd><code>long</code><br>$id_gp l'id du groupe</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Symfony\Component\HttpFoundation\Response</code><br>PersistProgressPst au formatat JSON<br />
+				</div>
+
+
+				<h4>Route("/importposts/progress/{id_gp}"</h4>
+				<div class="list">
+						, name="postsProgress")<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="progressMembresAction" id="_progressMembresAction">
+
+		<td class="attributes"><code>
+			 public 
+			Symfony\Component\HttpFoundation\Response
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_progressMembresAction">#</a>
+		<code><a href="source-class-FB.groupeBundle.Controller.ImportDataController.html#801-822" title="Go to source code">progressMembresAction</a>( <span>long <var>$id_gp</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Cette méthode nous permet de suivre la progression de l'importation des
+membres A chaque ajout on persiste un objet de PersistProgressionMb</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Cette méthode nous permet de suivre la progression de l'importation des
+membres A chaque ajout on persiste un objet de PersistProgressionMb</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$id_gp</var></dt>
+					<dd><code>long</code><br>$id_gp l'id du groupe</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Symfony\Component\HttpFoundation\Response</code><br>PersistProgressionMb au formatat JSON<br />
+				</div>
+
+
+				<h4>Route("/importmembres/progress/{id_gp}"</h4>
+				<div class="list">
+						, name="membresProgress")<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="sendVuesImportPostAction" id="_sendVuesImportPostAction">
+
+		<td class="attributes"><code>
+			 public 
+			Symfony\Component\HttpFoundation\Response
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_sendVuesImportPostAction">#</a>
+		<code><a href="source-class-FB.groupeBundle.Controller.ImportDataController.html#826-841" title="Go to source code">sendVuesImportPostAction</a>( )</code>
+
+		<div class="description short">
+			
+<p>Cette méthode nous permet d'importer le formulaire d'importation de
+groupe</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Cette méthode nous permet d'importer le formulaire d'importation de
+groupe</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>Symfony\Component\HttpFoundation\Response</code><br>une vue twig contenant un formaulaire<br />
+				</div>
+
+
+				<h4>Route("/importposts/vues",</h4>
+				<div class="list">
+						name="vues_importpost")<br />
+				</div>
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+	<table class="summary" id="constants">
+	<caption>Constants summary</caption>
+	<tr data-order="IMPORT_TOUT" id="IMPORT_TOUT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-FB.groupeBundle.Controller.ImportDataController.html#29-32" title="Go to source code"><b>IMPORT_TOUT</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">1</span></code></td>
+		<td class="description"><div>
+			<a href="#IMPORT_TOUT" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Une constante qui désigne l'mportation de tous les post</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Une constante qui désigne l'mportation de tous les post</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="IMPORT_DEPUIS" id="IMPORT_DEPUIS">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-FB.groupeBundle.Controller.ImportDataController.html#33-37" title="Go to source code"><b>IMPORT_DEPUIS</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">2</span></code></td>
+		<td class="description"><div>
+			<a href="#IMPORT_DEPUIS" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Une constante qui désigne l'mportation depuis une date donnée de mise à
+jour en fonction du nombre limite de post à importer</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Une constante qui désigne l'mportation depuis une date donnée de mise à
+jour en fonction du nombre limite de post à importer</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="IMPORT_JUSQUA" id="IMPORT_JUSQUA">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-FB.groupeBundle.Controller.ImportDataController.html#38-42" title="Go to source code"><b>IMPORT_JUSQUA</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">3</span></code></td>
+		<td class="description"><div>
+			<a href="#IMPORT_JUSQUA" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Une constante qui désigne l'mportation jusqu'a une date donnée de mise à
+jour en fonction du nombre limite de post à importer</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Une constante qui désigne l'mportation jusqu'a une date donnée de mise à
+jour en fonction du nombre limite de post à importer</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="IMPORT_DEP_JUSQ" id="IMPORT_DEP_JUSQ">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-FB.groupeBundle.Controller.ImportDataController.html#43-47" title="Go to source code"><b>IMPORT_DEP_JUSQ</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">4</span></code></td>
+		<td class="description"><div>
+			<a href="#IMPORT_DEP_JUSQ" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Une constante qui désigne l'mportation entre deux date de mise à jour</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Une constante qui désigne l'mportation entre deux date de mise à jour</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="IMPORT_DEP_JUSQ_DATE_CREAT" id="IMPORT_DEP_JUSQ_DATE_CREAT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-FB.groupeBundle.Controller.ImportDataController.html#48-52" title="Go to source code"><b>IMPORT_DEP_JUSQ_DATE_CREAT</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">5</span></code></td>
+		<td class="description"><div>
+			<a href="#IMPORT_DEP_JUSQ_DATE_CREAT" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Une constante qui désigne l'mportation entre deux date de publication</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Une constante qui désigne l'mportation entre deux date de publication</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="IMPORT_DEP_DATE_CREAT" id="IMPORT_DEP_DATE_CREAT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-FB.groupeBundle.Controller.ImportDataController.html#53-57" title="Go to source code"><b>IMPORT_DEP_DATE_CREAT</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">6</span></code></td>
+		<td class="description"><div>
+			<a href="#IMPORT_DEP_DATE_CREAT" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Une constante qui désigne l'mportation depuis une date donnée de
+publication en fonction du nombre limite de post à importer</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Une constante qui désigne l'mportation depuis une date donnée de
+publication en fonction du nombre limite de post à importer</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="IMPORT_JUSQ_DATE_CREAT" id="IMPORT_JUSQ_DATE_CREAT">
+
+		<td class="attributes"><code>integer</code></td>
+		<td class="name"><code>
+				<a href="source-class-FB.groupeBundle.Controller.ImportDataController.html#58-62" title="Go to source code"><b>IMPORT_JUSQ_DATE_CREAT</b></a>
+		</code></td>
+		<td class="value"><code><span class="php-num">7</span></code></td>
+		<td class="description"><div>
+			<a href="#IMPORT_JUSQ_DATE_CREAT" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Une constante qui désigne l'mportation jusqu'a une date donnée de
+publication en fonction du nombre limite de post à importer</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Une constante qui désigne l'mportation jusqu'a une date donnée de
+publication en fonction du nombre limite de post à importer</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		 FbAppGroup Documentation API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

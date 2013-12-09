@@ -1,171 +1,61 @@
-Symfony Standard Edition
-========================
+Facebook App d'importation de données d'un groupe
+-------------------------------------------------
 
-Welcome to the Symfony Standard Edition - a fully-functional Symfony2
-application that you can use as the skeleton for your new applications.
+Bienvenue dans cette application développé en php avec symfony 2 qui permet de récupérer les données d'un groupe Facebook vers une base de données externe à Facebook. Ce present document décrit comment l'installer sur une platforme Windows. Je tiens à souligner que l'application présent est en mode développement, ainsi l'indexe du projet c'est le fichier app_dev.php. 
 
-This document contains information on how to download, install, and start
-using Symfony. For a more detailed explanation, see the [Installation][1]
-chapter of the Symfony Documentation.
+Installation de l'application
+-------------------------------------------------
 
-1) Installing the Standard Edition
-----------------------------------
+1. Avant d'installer cette application pour tester ou développer d'avantage, il faut avoir déjà crée l'application auprès de Facebook. Sur lien [https://developers.facebook.com/apps][1], pour plus de détail sur comment créer l'application et comment configurer, referez vous au [document de l'atelier de création de l'application][2], après vous recuperer l'id de l'application et la clé secrete, vous les enregistrer dans un fichier sur votre PC.
 
-When it comes to installing the Symfony Standard Edition, you have the
-following options.
+2. Télecharger le format zip de cette application, si vous n'avez pas encore fait en [cliquant ici][3] et placez le sur le dossier de sites web de votre serveur Apache.
 
-### Use Composer (*recommended*)
+3. Assurez vous que vous avez [Composer][4] installé sur votre système, et qu'il est inclut sur votre variable d'environement PATH, si vous n'avez pas il y a une version avec ce projet nommé composer.phar
 
-As Symfony uses [Composer][2] to manage its dependencies, the recommended way
-to create a new project is to use it.
+4. Ouvrez le terminale pour les ligne de commande et placez au dossier racine de votre application , c'est à dire vous retrouver sur le dossier `FbAppGroup/`
 
-If you don't have Composer yet, download it following the instructions on
-http://getcomposer.org/ or just run the following command:
+    Taper la commande suivante si composer est inclut sur votre PATH:
 
-    curl -s http://getcomposer.org/installer | php
+        composer update 
 
-Then, use the `create-project` command to generate a new Symfony application:
+    Sinon tapez ceci :
 
-    php composer.phar create-project symfony/framework-standard-edition path/to/install
+        php composer.phar update
 
-Composer will install Symfony and all its dependencies under the
-`path/to/install` directory.
+    Il va installer toutes les bibliothèque requis pour votre application, les vendor en quelque sorte.
 
-### Download an Archive File
+5. Etant donné que mon propre fichier de paramètre je ne l'ai pas committé alors vous copiez le contenu du fichier `parameters.yml.dist` contenu sur `/app/config/`, vous créer un fichier sur le même emplacement nommé `parameters.yml` et vous collez le contenu et vous le parametrez en fonction de vos propres paramètres.
 
-To quickly test Symfony, you can also download an [archive][3] of the Standard
-Edition and unpack it somewhere under your web server root directory.
+6. Vous ouvrez le fichier `config.yml` contenu sur le repertoire `/app/config/` , vous défilez jusqu'a la fin pour ajouter votre clé secrete et l'id de votre application que vous avez recuperé depuis Facebook, vu qu'on a utilisé un Bundle spécifique déjà installé avec les vendor.
 
-If you downloaded an archive "without vendors", you also need to install all
-the necessary dependencies. Download composer (see above) and run the
-following command:
+    Vous devez remplacer l'app_id et la clé secrète par ici:
 
-    php composer.phar install
+        fos_facebook:
+            alias :  facebook
+            app_id: 486996558052473
+            secret: 573060401ac4899c156f4aacbc683d74
+         
+7. Vous devez taper les commandes necessaire pour créer votre base de données, tous les sheamas sont bien crées
 
-2) Checking your System Configuration
--------------------------------------
+    Il faut taper la commade suivante:
 
-Before starting coding, make sure that your local system is properly
-configured for Symfony.
+        php app/console doctrine:schema:create
+    
+8. Configurez votre serveur apache en creant une machine virtuelle, vous prenez l'alias de votre host et vous créer un nom d'hôte sur votre fichier hosts, referez vous sur le documment de l'atelier pour savoir comment faire celà au cas où vous avez des dfficultés. Supposons que vous avez pu créer le nom d'hôte www.fbgrpdonnees.com qui pointe sur le dossier web alors il faut le mettre comme url de l'application sur les paramètres de votre application, pour voir quelque chose comme ça http//:www.fbgrpdonnees.com/app_dev.php.
 
-Execute the `check.php` script from the command line:
+9. Il faut cherchez le fichier `/src/FB/groupeBundle/Resources/public/js/threadRecuperation.js` et remplacer l'adresse de de votre serveur web socket.
 
-    php app/check.php
+    Il faut éditer l'emplacement suivant pour correspondre au bon nom que vous avez choisit:
 
-The script returns a status code of `0` if all mandatory requirements are met,
-`1` otherwise.
+        conn=new WebSocket('ws://www.fbgrpdonnees.com:8080');
 
-Access the `config.php` script from a browser:
+10. Pour commencer à tester l'application ouvre le dossier racine et lancer le serveur websocket ceci en cliquant deux fois sur le fichier de ligne de commande `LancerServeurWS.bat`
 
-    http://localhost/path/to/symfony/app/web/config.php
+    Et c'est fini votre application est bien prêt pour travailler, accedez sur votre site/app_dev.php, 
 
-If you get any warnings or recommendations, fix them before moving on.
+Pour tout probleme contactez moi sur l'adresse bilalsoidik@gmail.com
 
-3) Browsing the Demo Application
---------------------------------
-
-Congratulations! You're now ready to use Symfony.
-
-From the `config.php` page, click the "Bypass configuration and go to the
-Welcome page" link to load up your first Symfony page.
-
-You can also use a web-based configurator by clicking on the "Configure your
-Symfony Application online" link of the `config.php` page.
-
-To see a real-live Symfony page in action, access the following page:
-
-    web/app_dev.php/demo/hello/Fabien
-
-4) Getting started with Symfony
--------------------------------
-
-This distribution is meant to be the starting point for your Symfony
-applications, but it also contains some sample code that you can learn from
-and play with.
-
-A great way to start learning Symfony is via the [Quick Tour][4], which will
-take you through all the basic features of Symfony2.
-
-Once you're feeling good, you can move onto reading the official
-[Symfony2 book][5].
-
-A default bundle, `AcmeDemoBundle`, shows you Symfony2 in action. After
-playing with it, you can remove it by following these steps:
-
-  * delete the `src/Acme` directory;
-
-  * remove the routing entry referencing AcmeDemoBundle in `app/config/routing_dev.yml`;
-
-  * remove the AcmeDemoBundle from the registered bundles in `app/AppKernel.php`;
-
-  * remove the `web/bundles/acmedemo` directory;
-
-  * remove the `security.providers`, `security.firewalls.login` and
-    `security.firewalls.secured_area` entries in the `security.yml` file or
-    tweak the security configuration to fit your needs.
-
-What's inside?
----------------
-
-The Symfony Standard Edition is configured with the following defaults:
-
-  * Twig is the only configured template engine;
-
-  * Doctrine ORM/DBAL is configured;
-
-  * Swiftmailer is configured;
-
-  * Annotations for everything are enabled.
-
-It comes pre-configured with the following bundles:
-
-  * **FrameworkBundle** - The core Symfony framework bundle
-
-  * [**SensioFrameworkExtraBundle**][6] - Adds several enhancements, including
-    template and routing annotation capability
-
-  * [**DoctrineBundle**][7] - Adds support for the Doctrine ORM
-
-  * [**TwigBundle**][8] - Adds support for the Twig templating engine
-
-  * [**SecurityBundle**][9] - Adds security by integrating Symfony's security
-    component
-
-  * [**SwiftmailerBundle**][10] - Adds support for Swiftmailer, a library for
-    sending emails
-
-  * [**MonologBundle**][11] - Adds support for Monolog, a logging library
-
-  * [**AsseticBundle**][12] - Adds support for Assetic, an asset processing
-    library
-
-  * **WebProfilerBundle** (in dev/test env) - Adds profiling functionality and
-    the web debug toolbar
-
-  * **SensioDistributionBundle** (in dev/test env) - Adds functionality for
-    configuring and working with Symfony distributions
-
-  * [**SensioGeneratorBundle**][13] (in dev/test env) - Adds code generation
-    capabilities
-
-  * **AcmeDemoBundle** (in dev/test env) - A demo bundle with some example
-    code
-
-All libraries and bundles included in the Symfony Standard Edition are
-released under the MIT or BSD license.
-
-Enjoy!
-
-[1]:  http://symfony.com/doc/2.3/book/installation.html
-[2]:  http://getcomposer.org/
-[3]:  http://symfony.com/download
-[4]:  http://symfony.com/doc/2.3/quick_tour/the_big_picture.html
-[5]:  http://symfony.com/doc/2.3/index.html
-[6]:  http://symfony.com/doc/2.3/bundles/SensioFrameworkExtraBundle/index.html
-[7]:  http://symfony.com/doc/2.3/book/doctrine.html
-[8]:  http://symfony.com/doc/2.3/book/templating.html
-[9]:  http://symfony.com/doc/2.3/book/security.html
-[10]: http://symfony.com/doc/2.3/cookbook/email.html
-[11]: http://symfony.com/doc/2.3/cookbook/logging/monolog.html
-[12]: http://symfony.com/doc/2.3/cookbook/assetic/asset_management.html
-[13]: http://symfony.com/doc/2.3/bundles/SensioGeneratorBundle/index.html
+[1]:  https://developers.facebook.com/apps
+[2]:  https://drive.google.com/file/d/0B-QBsa8QywtyZEVwN1JTSFpYcWM/edit?usp=sharing
+[3]:  https://github.com/bilaalsoidik/FbAppGroup/archive/master.zip
+[4]:  http://getcomposer.org/
